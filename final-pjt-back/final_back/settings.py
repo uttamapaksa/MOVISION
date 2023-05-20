@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # CORS policy
-    "corsheaders",
+    'corsheaders',
 
     # Auth
     'rest_framework.authtoken',
