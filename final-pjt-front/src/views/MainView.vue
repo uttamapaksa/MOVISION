@@ -6,7 +6,7 @@
       <section @click='check' class="content-section" data-scroll>
         <figure class="figure">
           <video class="mainvideo" muted autoplay>
-            <source src="@/movieplay/무비.mp4" type="video/mp4">
+            <source src="@/movieplay/movie.mp4" type="video/mp4">
           </video>
         </figure>
       </section>
@@ -173,14 +173,14 @@ export default {
       maintextvis: 0
     }
   },
-  created() {
-    if (!this.$store.state.movies.length) {
-      console.log(this.$store.state.movies)
-      } 
-    this.$store.dispatch('fetchMovies');
-  },
   mounted() {
-    console.log(this.$store.state.movies)
+    if (!this.$store.state.movies.length) {
+      this.$store.dispatch('fetchMovies');
+      console.log(this.$store.state.movies)
+    } else {
+      console.log(this.$store.state.movies)
+    }
+
     this.numcount()
     window.addEventListener('scroll', this.handleScroll)
 

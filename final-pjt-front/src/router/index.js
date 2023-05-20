@@ -5,7 +5,7 @@ import SearchView from '../views/SearchView.vue'
 import RecommendView from '../views/RecommendView.vue'
 import CommunityView from '../views/CommunityView.vue'
 import ProfileView from '../views/ProfileView.vue'
-import LogInView from '@/views/LogInView'
+import SignUpView from '@/views/SignUpView'
 import MovieDetailView from '@/views/MovieDetailView'
 Vue.use(VueRouter)
 
@@ -32,14 +32,14 @@ const routes = [
     component: CommunityView
   },
   {
-    path: '/profile',
+    path: '/profile/:id',
     name: 'ProfileView',
     component: ProfileView
   },
   {
-    path: '/login',
-    name: 'LogInView',
-    component: LogInView
+    path: '/signup',
+    name: 'SignUpView',
+    component: SignUpView
   },
   {
     path: '/movie/:id',
