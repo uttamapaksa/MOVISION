@@ -5,7 +5,7 @@
     <header>
       <section @click='check' class="content-section" data-scroll>
         <figure class="figure">
-          <video class="mainvideo" muted autoplay>
+          <video class="mainvideo" muted autoplay @ended="replay">
             <source src="@/movieplay/movie.mp4" type="video/mp4">
           </video>
         </figure>
@@ -340,6 +340,11 @@ export default {
   }, 
 
   methods: {
+    replay(event) {
+      event.target.currentTime = 0;
+      event.target.play();
+    },
+    
     numcount() {
       $('.count-num').each(function() { 
       var $this = $(this),
@@ -450,7 +455,7 @@ header {
 }
 
 .mainvideo {
-  width: 100vw;
+  width: 100%;
 }
 
 .mainbox {

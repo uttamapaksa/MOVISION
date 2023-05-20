@@ -74,7 +74,6 @@ export default {
         .catch(err => console.log(err))
     },
     getCurrentUser({ commit, getters }) {
-      console.log(111)
       axios({
         url: `${API_URL}/accounts/user/`,
         method: 'get',
