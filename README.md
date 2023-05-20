@@ -1,14 +1,14 @@
 ## back
 
-cd final-pjt-back
-pip install -r requirements.txt
-python manage.py makemigrations
-python manage.py migrate
-python manage.py runserver
+cd final-pjt-back<br>
+pip install -r requirements.txt<br>
+python manage.py makemigrations<br>
+python manage.py migrate<br>
+python manage.py runserver<br>
 
 
 ## front
 
-cd final-pjt-front
-npm i
-npm run serve
+cd final-pjt-front<br>
+npm i<br>
+npm run serve<br>
