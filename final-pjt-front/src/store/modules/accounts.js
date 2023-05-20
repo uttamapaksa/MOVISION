@@ -28,6 +28,7 @@ export default {
         .then(res => {
           console.log(res)
           context.commit('SET_TOKEN', res.data.key)
+          context.dispatch('getCurrentUser')
           router.push({name: 'MainView'})
         })
         .catch(err => console.log(err))
