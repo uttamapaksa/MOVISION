@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <form class="range" action="">
-      <label class="range__label" for="dummy">Range</label>
-      <input class="range__input" id="dummy" type="range" value="10" min="0" max="10" step="1">
-      <div class="range__output" aria-hidden="true" data-tip>
-        <div class="range__output-value-track">
-          <div class="range__output-values" data-values></div>
-        </div>
+<div id="ratebar">
+  <form class="range" action="">
+    <label class="range__label" for="dummy">Range</label>
+    <input class="range__input" id="dummy" type="range" value="5" min="0" max="10" step="1">
+    <div class="range__output" aria-hidden="true" data-tip>
+      <div class="range__output-value-track">
+        <div class="range__output-values" data-values></div>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
+</div>
 </template>
 
 <script>
@@ -19,8 +19,8 @@ export default {
     window.addEventListener("DOMContentLoaded",() => {
       const fr = new RangeSlidingValue("dummy");
       console.log(fr)
-      });
-    
+    });
+
     class RangeSlidingValue {
       constructor(id) {
         this.input = document.getElementById(id);
@@ -39,7 +39,7 @@ export default {
 
         const { min, max } = this.input;
 
-        for (let v = min; v <= max; v++) {
+        for (let v = min; v <= max; ++v) {
           const newSpan = digitSpan.cloneNode();
           newSpan.innerText = v;
           this.values?.appendChild(newSpan);
@@ -56,7 +56,7 @@ export default {
         const max = this.input.max || 100;
         const possibleValues = max - min;
         const relativeValue = (value - min) / possibleValues;
-        const percentRaw = relativeValue * 100;  // 이동 길이
+        const percentRaw = relativeValue * 100;
         const percent = +percentRaw.toFixed(2);
         const tipWidth = 2;
         const transXRaw = -tipWidth * relativeValue * possibleValues;
@@ -70,19 +70,11 @@ export default {
       }
     }
   },
-  
 }
 </script>
 
-<style scoped>
-* {
-  border: 0;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-
-}
-.range {
+<style>
+#ratebar {
   --hue: 223;
   --white: hsl(0,0%,100%);
   --lt-gray: hsl(var(--hue),10%,95%);
@@ -90,15 +82,15 @@ export default {
   --primary1: hsl(var(--hue),90%,90%);
   --primary3: hsl(var(--hue),90%,50%);
   --primary4: hsl(var(--hue),90%,30%);
-  --primary5: hsl(var(--hue),90%,10%);
+  /* --primary5: hsl(var(--hue),90%,10%); */
   --trans-dur: 0.3s;
   font-size: calc(16px + (32 - 16) * (100vw - 320px) / (1280 - 320));
 }
-body,
-input {
+#ratebar > body,
+#ratebar > input {
   font: 1em/1.5 "DM Sans", sans-serif;
 }
-body {
+#ratebar > body {
   background-color: var(--primary0);
   color: var(--primary5);
   height: 100vh;
@@ -119,7 +111,7 @@ body {
 }
 .range__label {
   overflow: hidden;
-  position: absolute;
+  position: relative;
   width: 1px;
   height: 1px;
 }

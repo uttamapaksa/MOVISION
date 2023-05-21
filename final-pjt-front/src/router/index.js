@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MainView from '../views/MainView.vue'
-import SearchView from '../views/SearchView.vue'
-import RecommendView from '../views/RecommendView.vue'
-import CommunityView from '../views/CommunityView.vue'
-import ProfileView from '../views/ProfileView.vue'
-import SignUpView from '@/views/SignUpView'
-import MovieDetailView from '@/views/MovieDetailView'
+import MainView from '../views/MainView'
+import SearchView from '../views/SearchView'
+import RecommendView from '../views/RecommendView'
+import CommunityView from '../views/CommunityView'
+import ProfileView from '../views/ProfileView'
+import SignUpView from '../views/SignUpView'
+import MovieDetailView from '../views/MovieDetailView'
 Vue.use(VueRouter)
 
 const routes = [
