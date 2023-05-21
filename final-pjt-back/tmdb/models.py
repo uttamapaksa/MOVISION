@@ -20,3 +20,12 @@ class Movie(models.Model):
     genres = models.ManyToManyField(Genre, blank=True)   #장르
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True) #좋아요한사람수
     actors = models.ManyToManyField(Actor, blank=True)  #배우
+
+
+class MovieComment(models.Model):
+    user = models.IntegerField()
+    # create_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, related_name="TMDB_Comment", on_delete=models.DO_NOTHING)
+    content =models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

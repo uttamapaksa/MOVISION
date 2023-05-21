@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Genre, Movie, Actor
+from .models import Genre, Movie, Actor, MovieComment
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -22,3 +22,9 @@ class ActorSerializer(serializers.ModelSerializer):
         model = Actor
         fields = '__all__'
         # fields = ('id', 'title', 'completed',)
+
+class MovieCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MovieComment
+        fields = '__all__'
+        read_only_fields = ('Movie',)

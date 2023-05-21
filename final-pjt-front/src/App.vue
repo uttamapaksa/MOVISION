@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <router-link v-if="isLogin" :to="{ name: 'ProfileView', params: { id: currentuser }}">profile</router-link>
+      <router-link v-if="isLogin" :to="{ name: 'ProfileView', params: { profile_id: currentuser }}">profile</router-link>
     </nav>
     <router-view/>
   </div>

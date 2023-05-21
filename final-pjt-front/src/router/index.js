@@ -7,6 +7,10 @@ import CommunityView from '../views/CommunityView'
 import ProfileView from '../views/ProfileView'
 import SignUpView from '../views/SignUpView'
 import MovieDetailView from '../views/MovieDetailView'
+import ReviewCreateView from '@/views/ReviewCreateView'
+import PartyCreateView from '@/views/PartyCreateView'
+import ReviewDetialView from '@/views/ReviewDetialView'
+import PartyDetialView from '@/views/PartyDetialView'
 Vue.use(VueRouter)
 
 const routes = [
@@ -32,7 +36,7 @@ const routes = [
     component: CommunityView
   },
   {
-    path: '/profile/:id',
+    path: '/profile/:profile_id',
     name: 'ProfileView',
     component: ProfileView
   },
@@ -42,9 +46,29 @@ const routes = [
     component: SignUpView
   },
   {
-    path: '/movie/:id',
+    path: '/movie/:movie_id',
     name: 'MovieDetailView',
     component: MovieDetailView
+  },
+  {
+    path: '/review_create',
+    name: 'ReviewCreateView',
+    component: ReviewCreateView
+  },
+  {
+    path: '/party_create',
+    name: 'PartyCreateView',
+    component: PartyCreateView
+  },
+  {
+    path: '/party/:party_id',
+    name: 'PartyDetialView',
+    component: PartyDetialView
+  },
+  {
+    path: '/review/:review_id',
+    name: 'ReviewDetialView',
+    component: ReviewDetialView
   },
 
 ]

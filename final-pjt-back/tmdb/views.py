@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 # from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from .models import Genre, Movie
-from .serializers import GenreSerializer, MovieSerializer
+from .serializers import GenreSerializer, MovieSerializer,MovieCommentSerializer
 
 @api_view(['GET'])
 def movie_list(request):
@@ -17,13 +17,67 @@ def movie_list(request):
     return Response(serializer.data)
 
 
-# @api_view(['GET'])
-# # @authentication_classes([JSONWebTokenAuthentication])
+@api_view(['GET'])
+# @authentication_classes([JSONWebTokenAuthentication])
 # @permission_classes([IsAuthenticated])
-# def movie_detail(request, movie_pk):
-#     movie = get_object_or_404(Movie, pk=movie_pk)
-#     serializer = MovieSerializer(movie)
-#     return Response(serializer.data)
+def movie_detail(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    serializer = MovieSerializer(movie)
+    return Response(serializer.data)
+
+
+
+@api_view(['GET','POST'])
+def comment_list(request,movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    print(movie)
+    print('1111111111111111111111111111111111111111111111111111111111111')
+    print(movie_pk)
+    if request.method == 'POST':  # 생성
+        serializer = MovieCommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(movie=movie)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+    elif request.method == 'GET':   #조회
+        comments_lst = movie.TMDB_Comment.all()   #역참조, 해당 영화에 있는 댓글집합
+        serializer = MovieCommentSerializer(comments_lst, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['DELETE', 'PUT'])
+def comment_detail(request, comment_pk):
+    comment = Comment.objects.get(pk=comment_pk)
+
+
+    if request.method == 'DELETE': #삭제
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    elif request.method == 'PUT':
+        serializer = MovieCommentSerializer(comment, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # @api_view(['GET', 'POST'])
 # # @authentication_classes([JSONWebTokenAuthentication])
