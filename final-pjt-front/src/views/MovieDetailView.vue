@@ -34,6 +34,11 @@
   <div class="one-comment">one comment
     <input type="text" v-model="one_comment" @keyup.enter="save_comment">
     <button @click="save_comment">댓글작성</button>
+
+    <div v-for="comment in movie_comments" :key="comment.id">
+      {{ comment }}
+      <button @click="movieCommentDelete(comment.id)">삭제 </button>
+    </div>
   </div>
   <div class="">이 영화를 좋아하는 사람들이 본 영화</div>
   <div class="director-actor">director-actor</div>
@@ -82,7 +87,11 @@ export default {
     // videoUrl () {
     //   return `https://www.youtube.com/embed/${this.movie.youtube_key}`
     // }
-  // }
+  // },
+    movie_comments() {
+      const movie_id = this.$route.params.movie_id
+      return this.$store.state.movie_comments.filter(comment => comment.movie == movie_id)
+    }
   },
   methods: {
     save_comment() {
@@ -100,10 +109,26 @@ export default {
       })
         .then(res => {
           console.log(res)
+          this.$store.dispatch('getMovieComments', movie_id)
         })
         .catch(err => {
           console.log(err)
         })
+    },
+    movieCommentDelete (comment_id) {
+      console.log(comment_id)
+      axios({
+        method: 'delete',
+        url: `${API_URL}/api/v1/movie_comment/${comment_id}`,
+      })
+       .then(res => {
+        const movie_id = this.$route.params.movie_id
+        console.log(res)
+        this.$store.dispatch('getMovieComments', movie_id)
+       })
+       .catch(err => {
+         console.log(err)
+       })
     }
   }
 }

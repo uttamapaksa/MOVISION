@@ -23,8 +23,8 @@ class Movie(models.Model):
 
 
 class MovieComment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    movie = models.ForeignKey(Movie, related_name="TMDB_Comment", on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,  related_name="TMDBComment")
+    movie = models.ForeignKey(Movie, related_name="TMDBComment", on_delete=models.DO_NOTHING)
     content =models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -2,12 +2,13 @@ from django.shortcuts import render
 
 # Create your views here.
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import status
 # from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from .models import Genre, Movie
+from .models import Genre, Movie, MovieComment
 from .serializers import GenreSerializer, MovieSerializer,MovieCommentSerializer
 
 @api_view(['GET'])
@@ -26,44 +27,36 @@ def movie_detail(request, movie_pk):
     return Response(serializer.data)
 
 
-
 @api_view(['GET','POST'])
-def comment_list(request, movie_pk):
+def comment_list(request,movie_pk): #영화 댓글 생성
+    user =request.user
     movie = get_object_or_404(Movie, pk=movie_pk)
-    user = request.user
-    print('view.py', 11111)
+    serializer = MovieCommentSerializer(data=request.data)
     if request.method == 'POST':  # 생성
-        print('view.py', 22222)
-        serializer = MovieCommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            print('view.py', 3333)
-            serializer.save(movie=movie, user=user)
-            return Response(serializer.data)
-        else : 
-            print('view.py', 44444)
-            return
+            serializer.save(movie=movie,user=user)
+            comments = movie.TMDBComment.all()
+            serializer = MovieCommentSerializer(comments,many=True)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         
     elif request.method == 'GET':   #조회
-        comments_lst = movie.TMDB_Comment.all()   #역참조, 해당 영화에 있는 댓글집합
+        comments_lst = get_list_or_404(MovieComment)
+        # comments_lst = movie.TMDBComment.all()   #역참조, 해당 영화에 있는 댓글집합
         serializer = MovieCommentSerializer(comments_lst, many=True)
         return Response(serializer.data)
 
-
 @api_view(['DELETE', 'PUT'])
 def comment_detail(request, comment_pk):
-    pass
-#     comment = Comment.objects.get(pk=comment_pk)
+    comment = MovieComment.objects.get(pk=comment_pk)
+    if request.method == 'DELETE': #삭제
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-#     if request.method == 'DELETE': #삭제
-#         comment.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
-#     elif request.method == 'PUT':
-#         serializer = MovieCommentSerializer(comment, data=request.data)
-#         if serializer.is_valid(raise_exception=True):
-#             serializer.save()
-#             return Response(serializer.data)
+    # elif request.method == 'PUT':
+    #     serializer = MovieCommentSerializer(comment, data=request.data)
+    #     if serializer.is_valid(raise_exception=True):
+    #         serializer.save()
+    #         return Response(serializer.data)
 
 
 
