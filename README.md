@@ -1,6 +1,5 @@
 ## download
 git clone https://lab.ssafy.com/vacanter/final_pjt.git .<br>
-<br>
 
 ## back
 cd final-pjt-back<br>
@@ -9,7 +8,6 @@ python manage.py makemigrations<br>
 python manage.py migrate<br>
 python manage.py loaddata movies.json
 python manage.py runserver<br>
-<br>
 
 ## front
 cd final-pjt-front<br>
