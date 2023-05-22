@@ -6,7 +6,7 @@ cd final-pjt-back<br>
 pip install -r requirements.txt<br>
 python manage.py makemigrations<br>
 python manage.py migrate<br>
-python manage.py loaddata movies.json
+python manage.py loaddata movies.json<br>
 python manage.py runserver<br>
 
 ## front
