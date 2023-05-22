@@ -1,5 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
+from django.conf import settings
+# from tmdb.models import Movie
 
 
 # Create your models here.
@@ -11,5 +13,26 @@ class User(AbstractUser):
     # seen_movies = models.ManyToManyField(Movie, related_name='seen_users', through='MovieSeen')
     # email = models.EmailField(max_length=200)
     # nickname = models.CharField(max_length=20, blank=True) 
-    # profile_image = models.ImageField(blank=True, null=True)
     # # 문자열 기반 필드는 null True 금지!
+
+class Userdata(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    level = models.IntegerField(default=1)
+    exp = models.IntegerField(default=1)
+    nickname = models.TextField(blank=True)
+    # favorite_genres = models.IntegerField()
+    # profile_image = models.ImageField()
+    
+    
+# class LikeMovies(models.Model):
+#     user = models.ForeignKey(Userdata, on_delete=models.CASCADE)
+#     user = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    
+# class SeenMovies(models.Model):
+#     user = models.ForeignKey(Userdata, on_delete=models.CASCADE)
+#     user = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    
+# class UserProfile(models.Model):
+#     user = models.ForeignKey(Userdata, on_delete=models.CASCADE)
+#     profile_image = models.ImageField(blank=True, null=True)

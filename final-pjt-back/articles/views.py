@@ -65,8 +65,6 @@ def review_comment_create(request, review_pk):  #댓글 생성
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
-
-
 def review_comment_list(request):
     if request.method == 'GET':    #댓글 조회 
         # comments = Comment.objects.all()

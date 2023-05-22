@@ -8,7 +8,7 @@ urlpatterns = [
     #리뷰게시판
     path('reviews/', views.review_list),
     path('reviews/<int:review_pk>/', views.review_detail),
-    path('reviews/<int:review_pk>/create', views.review_comment_create),  # 리뷰게시판 댓글 생성
+    path('reviews/<int:review_pk>/create/', views.review_comment_create),  # 리뷰게시판 댓글 생성
     path('review_comments/', views.review_comment_list),
     path('review_comments/<int:review_comment_pk>/', views.review_comment_detail),
     # path('reviews/<int:review_pk>/comments/', views.review_comment_create),
