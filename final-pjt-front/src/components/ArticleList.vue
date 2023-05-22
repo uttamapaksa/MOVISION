@@ -5,13 +5,10 @@
 
     </div>
     <div class="article-title">
-    작성자 : {{ article.user}}
-    
-    제목 :{{article.title}}
+    작성자 : {{ article.username}} | 
+    제목 : {{ article.title }} | 
+    작성일 :{{article.created_at.slice(0,10)}}
 
-    영화 제목 : ㅁㅁㅁㅁ
-    (내용) : ~~~~~~
-    작성일 : num
 
     </div>
 
@@ -49,11 +46,11 @@ export default {
 
 .article-pic {
   border: solid 1px red;
-  width: 30%;
+  width: 10%;
 }
 .article-title {
   border: solid 1px red;
-  width: 60%;
+  width: 80%;
 }
 
 .article-rate {

@@ -9,7 +9,7 @@
        <!-- 로그인 버튼-->
       <a v-if="!isLogin" data-bs-toggle="modal" data-bs-target="#staticBackdrop" href="">Login</a>
       <!-- 로그인 -->
-      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
@@ -118,5 +118,9 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.modalhidden {
+  display: none;
 }
 </style>

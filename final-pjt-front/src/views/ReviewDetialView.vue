@@ -2,12 +2,12 @@
   <div>
     <h1>Detail</h1>
 
-    <p>작성자 : {{ review.user }}</p>
+    <p>작성자 : {{ review.username }}</p>
+    <p>작성자번호 : {{ review.user }}</p>
     <p>글 번호 : {{ review.id }}</p>
     <p>제목 : {{ review.title }}</p>
     <p>내용 : {{ review.content }}</p>
-    <p>작성시간 : {{ review.created_at }}</p>
-    <p>수정시간 : {{ review.updated_at }}</p>
+    <p>작성시간 : {{ review.created_at.slice(0,10) }} | 수정시간 : {{ review.updated_at.slice(0,10) }}</p>
     <!-- 댓글 input -->
     <div>
       댓글을 남겨주세요.
@@ -16,18 +16,20 @@
     </div>
     <!-- 댓글 리스트 -->
     <div v-for="comment in comment_lst" :key=comment.id >
-      댓글 작성자: {{comment.user}}
-      댓글 번호:{{comment.id}} <br>
-      내용 :{{comment.content}} <br>
-      생성일 :{{comment.created_at}}
-      <button @click="review_delete_comment(comment.id)">삭제</button>
+      내용 : {{comment.content}} |
+      작성자: {{comment.username}} <br> 
+      작성자번호: {{comment.user}} | 
+      댓글번호:{{comment.id}} |
+      작성시간 :{{comment.created_at.slice(0, 10)}}
+      <button v-if="comment.user == currentuser" @click="review_delete_comment(comment.id)">삭제</button>
     </div>
     <br><br>
     <!-- 글 삭제,수정 -->
     <div>
-      <button @click="review_delete(review.id)">글 삭제하기</button>
+      <button v-if="review.user == currentuser" @click="review_delete(review.id)">글 삭제하기</button>
+      &nbsp;&nbsp;&nbsp;&nbsp; <!-- 공백문자 -->
       <!-- <button @click="review_update(review.id)">글 수정하기</button> -->
-      <button>글 수정하기</button>
+      <button v-if="review.user == currentuser">글 수정하기</button>
     </div>
   </div>
 </template>
@@ -47,39 +49,47 @@ export default {
   mounted() {  //get으로 데이터 요청
     this.$store.dispatch('getreviewcomment')
   },
-
+  
   computed: {   //변수로 사용할 함수
     comment_lst() {   
       return this.$store.state.review_comments.filter(comment=> (comment.review == this.$route.params.review_id))
     },
     review() {
       return this.$store.state.review_articles.filter(review=> (review.id ==this.$route.params.review_id))[0]
+    },
+    currentuser() {
+      return this.$store.getters.currentuser
     }
   },
   methods: { 
     review_save_comment() {     //댓글 저장 요청
       const current_id = this.$route.params.review_id
       const currentuser = this.$store.getters.currentuser  //현재 유저id 정보
+      const currentusername = this.$store.getters.currentusername  //현재 유저id 이름
       const authHeader = this.$store.getters.authHeader   // 유저 토큰
+      console.log('reivew_save_comment.axios')
       axios({
         method: 'POST',
         url: `${API_URL}/api/v1/articles/reviews/${ current_id }/create/`,
-        data: {content :this.review_comment, review : this.$route.params.review_id, user: currentuser,},
+        data: {content :this.review_comment, review : this.$route.params.review_id, user: currentuser, username: currentusername,},
         headers: authHeader,   //user정보를 data에 넣을땐 토큰 추가필수
       })
       .then((res) => {
         console.log(res)
+        console.log('reivew_save_comment.then')
         this.$store.dispatch('getreviewcomment')
       })
       .catch((err) => {
         console.log(err)
+        console.log('reivew_save_comment.catch')
       })
+      this.review_comment = ''
     },
-
+    
     review_delete_comment(com_id) {      //댓글 삭제 요청
       axios({
         method: 'DELETE',
-        url: `${API_URL}/api/v1/articles/review_comments/${com_id}`,
+        url: `${API_URL}/api/v1/articles/review_comments/${com_id}/`,
       })
       .then((res) => {
         console.log(res)
@@ -91,16 +101,19 @@ export default {
     },
 
     review_delete(review_id) { //글 삭제 요청
+      console.log('reivew_delete.axios')
       axios({
         method: 'DELETE',
-        url: `${API_URL}/api/v1/articles/reviews/${review_id}`,
+        url: `${API_URL}/api/v1/articles/reviews/${review_id}/`,
       })
       .then((res) => {
         console.log(res)
+        console.log('reivew_delete.then')
         this.$router.push({name: 'CommunityView'})
       })
       .catch((err) => {
         console.log(err)
+        console.log('reivew_delete.catch')
       })
     },
     // review_update(review_id) { //글 수정 요청

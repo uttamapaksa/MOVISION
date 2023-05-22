@@ -30,6 +30,7 @@ export default {
       const title = this.title
       const content = this.content
       const currentuser = this.$store.getters.currentuser  //현재 유저id 정보
+      const currentusername = this.$store.getters.currentusername  //현재 유저id 이름
       const authHeader = this.$store.getters.authHeader   // 유저 토큰
       if (!title) {
         alert('제목 입력해주세요')
@@ -41,7 +42,7 @@ export default {
       axios({
         method: 'post',
         url: `${API_URL}/api/v1/articles/reviews/`,
-        data: { title, content, user: currentuser},
+        data: { title, content, user: currentuser, username: currentusername,},
         headers: authHeader,   //user정보를 data에 넣을땐 토큰 추가필수
       })
       .then(() => {

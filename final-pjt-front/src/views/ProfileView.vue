@@ -8,23 +8,27 @@
         <img src="#" alt="">프로필 사진
       </div>
       <div class="profile-status">프로필 정보
-        <p>{{ userdata.nickname }} | 팔로우버튼(토글)</p>
+        <p></p>
+
+        {{ userdata }}
+        <p>아이디 : {{ userdata.username }} | <button v-if="userdata.user!==currentuser">팔로우</button></p>
+        <!-- <p>닉네임 : {{ userdata.nickname }}</p> -->
         <p>팔로잉 | 팔로우</p>
-        <p>가입일 : {{ userdata.created_at }}</p>
-        <button>회원정보수정(버튼)</button>
+        <p>가입일 : {{ userdata.created_at}}</p>
+        <button v-if="userdata.user===currentuser">회원정보수정(버튼)</button>
         <div>
+          <p>레벨 : {{ userdata.level }}</p>
           <p>경험치 : {{ userdata.exp }}</p>
-          <p>레벨 : {{ userdata.exp }}</p>
         </div>
       </div>
     </div>
 
     <div class="profile-2 row">
-      <div v-for="article in articles" :key="article.id" class="article-num nums col-6">article
-        {{article.id}}
-        {{article.id}}
+      <div class="article-num nums col-6">
+        내 글 : {{articles.length}} 개
       </div>
-      <div class="comment-num nums">comment
+      <div class="comment-num nums">
+        내 댓글 : {{ comments.length }} 개
       </div>
       <div class="likes-num nums">likes
       </div>
@@ -45,15 +49,26 @@
 export default {
   name: 'ProfileView',
   computed: {
+    // article() {
+      //   return this.$store.state.articles.filter(article => article.user = this.currentuser)
+      // },
+      // currentuser() {
+        //   return this.$store.getters.currentuser
+        // }
+    articles() {
+      return this.$store.state.review_articles.filter(article => article.user)
+    },
+    comments() {
+      const review_comments = this.$store.state.review_comments.filter(comment => comment.user)
+      const party_comments = this.$store.state.party_comments.filter(comment => comment.user)
+      return [...review_comments, ...party_comments]
+    },
+    currentuser() {
+      return this.$store.getters.currentuser
+    },
     userdata() {
       return this.$store.getters.userdata
     },
-    // article() {
-    //   return this.$store.state.articles.filter(article => article.user = this.currentuser)
-    // },
-    // currentuser() {
-    //   return this.$store.getters.currentuser
-    // }
   },
 }
 </script>
@@ -92,8 +107,8 @@ export default {
 
 .nums {
   border: solid 1px black;
-  width: 50%;
-  height: 50%;
+  width: 25%;
+  height: 100%;
 }
 
 </style>

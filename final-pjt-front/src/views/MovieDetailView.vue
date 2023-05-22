@@ -1,24 +1,31 @@
 <template>
 <div id="moviedetailview">
-  <div class="poster-header">poster header</div>
+  <!-- <div class="poster-header"></div> -->
   <div class="poster-line">
     <div class="poster-img">
       <img :src="`https://image.tmdb.org/t/p/w400${movie.poster_path}`" class="card-img-top" alt="...">
     </div>
 
     <div class="poster-detail">
-      <div class="detail-info">
-        <div class="detailss">영화제목 {{ movie.id }}</div>
-        <div class="detailss">상영년도{{ release_year }}</div>
-        <div class="detailss">평점 {{ movie.vote_average }}</div>
-        <div class="detailss">장르 {{ movie.genres }}</div> (누르면 장르 검색창 이동)
-        <div class="detailss">인기 {{ movie.popularity }}</div>
-        <div class="detailss">개봉일{{ movie.release_date }}</div>
-        <div class="detailss">좋아요 {{ movie.like_users }}</div> ()
-        <div class="detailss"> 찜하기 버튼(토글)(MtoM: Movie-User)</div> ()
-        <div class="detailss"> 본 영화 버튼(토글)(MtoM: Movie-User)</div> ()
-        <div class="detailss">언어(보류)</div>
-        <div class="detailss">예고편보기</div>
+      <div class="detail-info container">
+        <div class="row h-50">
+          <div class="detailss detailss-title my-auto ">
+            {{ movie.title }}({{ movie.release_date.slice(0,4) }})
+          </div>
+        </div>
+        <div class="row h-25">
+          <div class="detailss col-2">장르{{ movie.genres }}</div>
+          <div class="detailss col-2">인기 {{ movie.popularity }}</div>
+          <div class="detailss col-2">개봉일{{ movie.release_date }}</div>
+          <div class="detailss col-2">예고편보기</div>
+        </div>
+        <div class="row h-25">
+          <div class="detailss col-2">평점 {{ movie.vote_average }}</div>
+          <div class="detailss col-2">좋아요 {{ movie.like_users }}</div>
+          <div class="detailss col-2"> 찜하기 버튼(MtoM)</div>
+          <div class="detailss col-2"> 본 영화 버튼(MtoM)</div>
+          <!-- <div class="detailss col-2">언어(보류)</div> -->
+        </div>
         <!-- <div  class="ratio ratio-16x9">
           <iframe :src="videoUrl" frameborder="0"></iframe>
         </div> -->
@@ -36,8 +43,10 @@
     <button @click="save_comment">댓글작성</button>
 
     <div v-for="comment in movie_comments" :key="comment.id">
-      {{ comment }}
-      <button @click="movieCommentDelete(comment.id)">삭제 </button>
+      {{ comment.content }} | 
+      {{ comment.username }} | 
+      {{ comment.created_at.slice(0, 10) }}
+      <button v-if="comment.user==currentuser" @click="movieCommentDelete(comment.id)">삭제 </button>
     </div>
   </div>
   <div class="">이 영화를 좋아하는 사람들이 본 영화</div>
@@ -91,19 +100,23 @@ export default {
     movie_comments() {
       const movie_id = this.$route.params.movie_id
       return this.$store.state.movie_comments.filter(comment => comment.movie == movie_id)
+    },
+    currentuser() {
+      return this.$store.getters.currentuser
     }
   },
   methods: {
     save_comment() {
       const movie_id = this.$route.params.movie_id
       const currentuser = this.$store.getters.currentuser
+      const currentusername = this.$store.getters.currentusername
       const authHeader = this.$store.getters.authHeader
       console.log(authHeader)
       axios({
         method: 'post',
         url: `${API_URL}/api/v1/detail/${movie_id}/comment_list/`,
         data: {
-          user: currentuser, movie: movie_id, content: this.one_comment,
+          user: currentuser, username: currentusername, movie: movie_id, content: this.one_comment,
         },
         headers: authHeader,
       })
@@ -116,10 +129,9 @@ export default {
         })
     },
     movieCommentDelete (comment_id) {
-      console.log(comment_id)
       axios({
         method: 'delete',
-        url: `${API_URL}/api/v1/movie_comment/${comment_id}`,
+        url: `${API_URL}/api/v1/movie_comment/${comment_id}/`,
       })
        .then(res => {
         const movie_id = this.$route.params.movie_id
@@ -135,40 +147,64 @@ export default {
 </script>
 
 <style>
-.poster-header {
+/* .poster-header {
   width: 90%;
-  height: 15vh;
+  height: 10vh;
   background: orange;
-}
+  overflow: hidden;
+} */
 
+/* 포스터+설명 박스 */
 .poster-line {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   border: solid 3px blueviolet;
   width: 90%;
-  height: 55vh;
+  height: 68vh;
 }
 
+/* 포스터 이미지 박스 */
 .poster-img {
   border: solid 3px blueviolet;
-  width: 25%;
-  height: 45vh;
+  width: 30%;
+  height: 63vh;
 }
 
+/* 포스터 이미지 */
+.card-img-top {
+  height: 100%;
+  /* object-fit: cover; */
+}
+
+/* 영화 정보 박스 */
 .poster-detail {
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 65%;
-  height: 45vh;
+  height: 63vh;
+  margin: 5% 0;
 }
 
+/* 영화 세부 정보 */
 .detail-info {
   border: solid 3px blueviolet;
   width: 100%;
   height: 60%;
-  
 }
+
+/* 영화 세부 정보 하위 박스 */
+.detailss {
+  border: solid 2px lightcoral;
+  /* height: 100%; */
+}
+
+.detailss-title {
+  font-size: 5vh;
+}
+
+/* 영화 개요 */
 .detail-overview {
   border: solid 3px blueviolet;
   overflow: hidden;
@@ -176,11 +212,6 @@ export default {
   height: 40%;
 }
 
-.detailss {
-  border: solid 2px lightcoral;
-  /* width: 20%; */
-  height: 10%;
-}
 
 .one-comment {
   border: solid 3px blueviolet;

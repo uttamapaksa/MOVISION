@@ -18,23 +18,10 @@ export default new Vuex.Store({
     review_comments: [],
     party_articles: [],
     party_comments: [],
-    movies: [],
-    movie: null,
     party: false,
-    movie_comments: [],
   },
 
   mutations: {
-    // GET_ARTICLES(state,articles) {
-    //   state.articles = articles
-    // },
-    //영화
-    GET_MOVIES: (state, movies) => state.movies = movies,
-    GET_MOVIE_DETAIL: (state, movie) => state.movie = movie,
-    GET_MOVIE_COMMENTS: (state, movie_comments) => state.movie_comments = movie_comments,
-
-
-
     //게시판
     GET_REVIEWARTICLES: (state, articles)=> state.review_articles = articles,
     GET_PARTYARTICLES: (state, articles) => state.party_articles = articles,
@@ -44,46 +31,6 @@ export default new Vuex.Store({
     GET_REVIEWCOMMENT: (state,review_comments) => state.review_comments = review_comments,
   },
   actions: {
-    //영화
-    fetchMovies(context) {
-      axios({
-        method:'get',
-        url: `${API_URL}/api/v1/`,
-      })
-        .then((res)=> {
-          context.commit('GET_MOVIES', res.data)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
-    getMovieDetail(context, id) {
-      axios({
-        method: 'get',
-        url:`http://127.0.0.1:8000/api/v1/detail/${id}`,
-      })
-        .then(res => {
-          context.commit('GET_MOVIE_DETAIL', res.data)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    getMovieComments(context,id) {
-      axios({
-        method: 'get',
-        url:`http://127.0.0.1:8000/api/v1/detail/${id}/comment_list`,
-      })
-        .then(res => {
-          console.log(res,'댓글생성확인')
-          context.commit('GET_MOVIE_COMMENTS', res.data)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-
-
     //게시판
     getReviewArticles(context) {   //리뷰게시판 조회
       axios({
@@ -98,7 +45,6 @@ export default new Vuex.Store({
         console.log('리뷰게시판 내용이 없어')
       })
     },
-
     getPartyArticles(context) {     //파티게시판 조회
       axios({
         method: 'get',
@@ -106,7 +52,7 @@ export default new Vuex.Store({
       })
         .then((res) => {
         console.log(res, context)
-          context.commit('GET_PARTYARTICLES', res.data)
+        context.commit('GET_PARTYARTICLES', res.data)
         })
         .catch((err) => {
         console.log(err)
@@ -122,7 +68,7 @@ export default new Vuex.Store({
     getreviewcomment(context) {  
       axios({
         method: 'get',
-        url: `${API_URL}/api/v1/articles/review_comments`,
+        url: `${API_URL}/api/v1/articles/review_comments/`,
       })
         .then((res) => {
           console.log(res, context)
