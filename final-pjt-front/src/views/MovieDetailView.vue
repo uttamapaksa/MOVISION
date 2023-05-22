@@ -12,7 +12,7 @@
         <div class="detailss">상영년도{{ release_year }}</div>
         <div class="detailss">평점 {{ movie.vote_average }}</div>
         <div class="detailss">장르 {{ movie.genres }}</div> (누르면 장르 검색창 이동)
-        <div class="detailss">인기 {{ movie.popularlity }}</div>
+        <div class="detailss">인기 {{ movie.popularity }}</div>
         <div class="detailss">개봉일{{ movie.release_date }}</div>
         <div class="detailss">좋아요 {{ movie.like_users }}</div> ()
         <div class="detailss"> 찜하기 버튼(토글)(MtoM: Movie-User)</div> ()
@@ -33,7 +33,7 @@
 
   <div class="one-comment">one comment
     <input type="text" v-model="one_comment" @keyup.enter="save_comment">
-    <button @click="save_comment"></button>
+    <button @click="save_comment">댓글작성</button>
   </div>
   <div class="">이 영화를 좋아하는 사람들이 본 영화</div>
   <div class="director-actor">director-actor</div>
@@ -86,15 +86,17 @@ export default {
   },
   methods: {
     save_comment() {
-      const current_id = this.$route.params.movie_id
+      const movie_id = this.$route.params.movie_id
       const currentuser = this.$store.getters.currentuser
+      const authHeader = this.$store.getters.authHeader
+      console.log(authHeader)
       axios({
         method: 'post',
-        url: `${API_URL}/api/v1/detail/${current_id}/comment_list`,
+        url: `${API_URL}/api/v1/detail/${movie_id}/comment_list/`,
         data: {
-          content: this.one_comment,
-          user: currentuser,
+          user: currentuser, movie: movie_id, content: this.one_comment,
         },
+        headers: authHeader,
       })
         .then(res => {
           console.log(res)
@@ -139,13 +141,14 @@ export default {
 .detail-info {
   border: solid 3px blueviolet;
   width: 100%;
-  /* height: 30vh; */
+  height: 60%;
   
 }
 .detail-overview {
   border: solid 3px blueviolet;
+  overflow: hidden;
   width: 100%;
-  height: 15vh;
+  height: 40%;
 }
 
 .detailss {

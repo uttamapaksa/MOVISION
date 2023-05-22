@@ -26,10 +26,11 @@ export default {
   },
 
   methods: {
-    createArticle() {
+    createArticle() {   //리뷰 게시글 생성
       const title = this.title
       const content = this.content
-
+      const currentuser = this.$store.getters.currentuser  //현재 유저id 정보
+      const authHeader = this.$store.getters.authHeader   // 유저 토큰
       if (!title) {
         alert('제목 입력해주세요')
         return
@@ -40,14 +41,15 @@ export default {
       axios({
         method: 'post',
         url: `${API_URL}/api/v1/articles/reviews/`,
-        data: { title, content},
+        data: { title, content, user: currentuser},
+        headers: authHeader,   //user정보를 data에 넣을땐 토큰 추가필수
       })
       .then(() => {
         console.log('asdf')
         this.$router.push({name: 'CommunityView'})
       })
       .catch((err) => {
-        console.log('애러')
+        console.log('게시판 생성 애러')
         console.log(err)
       })
     }

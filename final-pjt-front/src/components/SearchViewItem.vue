@@ -4,8 +4,10 @@
   <div class="card-body">
     <div class="card-text">
       제목 : {{ movie.title}}<hr>
-      장르 : {{ genres }}<br>
-      id값 : {{ movie.id}}<hr>
+      평점 : {{ movie.vote_average}}<hr>
+      인기 : {{ movie.popularity}}<hr>
+      개봉일 : {{ movie.release_date}}<hr>
+      {{ genres }}<br>
       <!-- test2 : {{ test2 }} -->
     </div>
   </div>

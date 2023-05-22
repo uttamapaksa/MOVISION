@@ -28,16 +28,20 @@ def movie_detail(request, movie_pk):
 
 
 @api_view(['GET','POST'])
-def comment_list(request,movie_pk):
+def comment_list(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
-    print(movie)
-    print('1111111111111111111111111111111111111111111111111111111111111')
-    print(movie_pk)
+    user = request.user
+    print('view.py', 11111)
     if request.method == 'POST':  # 생성
+        print('view.py', 22222)
         serializer = MovieCommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(movie=movie)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            print('view.py', 3333)
+            serializer.save(movie=movie, user=user)
+            return Response(serializer.data)
+        else : 
+            print('view.py', 44444)
+            return
         
     elif request.method == 'GET':   #조회
         comments_lst = movie.TMDB_Comment.all()   #역참조, 해당 영화에 있는 댓글집합
@@ -47,18 +51,19 @@ def comment_list(request,movie_pk):
 
 @api_view(['DELETE', 'PUT'])
 def comment_detail(request, comment_pk):
-    comment = Comment.objects.get(pk=comment_pk)
+    pass
+#     comment = Comment.objects.get(pk=comment_pk)
 
 
-    if request.method == 'DELETE': #삭제
-        comment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     if request.method == 'DELETE': #삭제
+#         comment.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    elif request.method == 'PUT':
-        serializer = MovieCommentSerializer(comment, data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
+#     elif request.method == 'PUT':
+#         serializer = MovieCommentSerializer(comment, data=request.data)
+#         if serializer.is_valid(raise_exception=True):
+#             serializer.save()
+#             return Response(serializer.data)
 
 
 

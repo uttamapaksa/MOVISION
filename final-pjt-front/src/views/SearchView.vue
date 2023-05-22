@@ -2,18 +2,17 @@
 <div>
 
   <div>
-    제목 <input type="text">
-    <input type="submit">
-  </div>
+    제목 : <input type="text" :value="titleinput" @input="titleinput = $event.target.value">
+  </div><br>
 
   <div class="search-box">
     <div class="checkbox">
       <div class="check check-sort">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          {{ sort }}
+          {{ sortname }}
         </button>  
         <ul class="dropdown-menu">
-          <li v-for="(sortname, idx) in sorts" :key="idx" class="dropdown-item" @click="checksort(idx)">{{sorts[idx]}}</li>
+          <li v-for="(sortname, idx) in sorts" :key="idx" class="dropdown-item" @click="checksort(idx)">{{sortname}}</li>
         </ul>
       </div>
       <!-- <div class="check check-seen">
@@ -62,8 +61,9 @@ export default {
   },
   data() {
     return {
+      titleinput: '',
       sorts: ['평점 높은순', '평점 낮은순', '개봉 빠른순', '개봉 늦은순', '인기 높은순', '인기 낮은순', '제목 오름차순', '제목 내림차순',],
-      sort: '평점 높은순',
+      sort: 0,
       genres: [12, 18, 16, 27, 28, 35, 36, 37, 53, 80, 99, 878, 9648, 10402, 10749, 10751, 10752, 10770,],
       select_total: true,
       select_genres: [],
@@ -72,21 +72,80 @@ export default {
     }
   },
   computed: {
-    movies() {
-      if (this.select_total) {
-        return this.$store.state.movies
-      }
-      else {
-        return this.$store.state.movies.filter(movie => Object.values(movie.genres).some(genre => this.select_genres.includes(genre)))
-      }
+    sortname() {
+      return this.sorts[this.sort]
     },
+    // movies_by_genres() {
+    //   if (this.select_total) {
+    //     return this.$store.state.movies
+    //   }
+    //   else {
+    //     return this.$store.state.movies.filter(movie => Object.values(movie.genres).some(genre => this.select_genres.includes(genre)))
+    //   }
+    // },
     totalgenres() {
       return this.$store.getters.totalgenres
+    },
+    movies() {
+      // 장르별 검색
+      let movies_by_genres = []
+      if (this.select_total) {
+        movies_by_genres = this.$store.state.movies;
+      } else {
+        movies_by_genres = this.$store.state.movies.filter(movie => Object.values(movie.genres).some(genre => this.select_genres.includes(genre)));
+      }
+
+      // 제목별 검색
+      let movies_by_search = []
+      if (!this.titleinput) {
+        movies_by_search = movies_by_genres
+      } else {
+        movies_by_search = movies_by_genres.filter(movie => movie.title.includes(this.titleinput))      
+      }
+
+      // 검색 결과 정렬
+      if (this.sort === 0) {
+        return movies_by_search.sort(function (a, b) {
+          return b.vote_average - a.vote_average
+        })
+      } else if (this.sort === 1) {
+        return movies_by_search.sort(function (a, b) {
+          return a.vote_average - b.vote_average
+        })
+      } else if (this.sort === 2) {
+        return movies_by_search.sort(function (a, b) {
+          return new Date(b.release_date) - new Date(a.release_date);
+        })
+      } else if (this.sort === 3) {
+        return movies_by_search.sort(function (a, b) {
+          return new Date(a.release_date) - new Date(b.release_date);
+        })
+      } else if (this.sort === 4) {
+        return movies_by_search.sort(function (a, b) {
+          return b.popularity - a.popularity
+        })
+      } else if (this.sort === 5) {
+        return movies_by_search.sort(function (a, b) {
+          return a.popularity - b.popularity
+        })
+      } else if (this.sort === 6) {
+        return movies_by_search.sort(function (a, b) {
+          return b.title.localeCompare(a.title);
+        })
+      } else if (this.sort === 7) {
+        return movies_by_search.sort(function (a, b) {
+          return a.title.localeCompare(b.title);
+        })
+      } else {
+        return movies_by_search.sort(function (a, b) {
+          return b.vote_average - a.vote_average
+        })
+      }
     }
   },
   methods: {
     checksort(idx) {
-      this.sort = this.sorts[idx]
+      this.sort = idx
     },
     checkgenre(genre) {
       if (!genre) {

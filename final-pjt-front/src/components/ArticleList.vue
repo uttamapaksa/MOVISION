@@ -1,12 +1,14 @@
 <template>
-  <div class="article-list">
+  <div class="article-list" @click="goreviewdetail">
     <div class="article-pic">
     {{article.picture}}
 
     </div>
     <div class="article-title">
-    작성자 : ㅁㄴㅇㄹ
+    작성자 : {{ article.user}}
+    
     제목 :{{article.title}}
+
     영화 제목 : ㅁㅁㅁㅁ
     (내용) : ~~~~~~
     작성일 : num
@@ -17,7 +19,7 @@
     별점 : 
 
     </div>
-
+    
   </div>
 </template>
 
@@ -27,6 +29,11 @@ export default {
   name : 'ArticleList',
   props: {
     article: Object,
+  },
+  methods: {
+    goreviewdetail() {
+      this.$router.push({name: 'ReviewDetialView', params:{review_id:this.article.id}})
+    }
   }
 }
 </script>
