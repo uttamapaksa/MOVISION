@@ -10,6 +10,8 @@
 
       <label for="password2"> password confirmation : &nbsp;</label>
       <input type="password" id="password2" v-model="password2">
+      <!-- <label for="nickname"> nickname : &nbsp;</label>
+      <input type="text" id="nickname" v-model="nickname"> -->
       
       &nbsp; <input type="submit" value="SignUp">
     </form>
@@ -24,6 +26,7 @@ export default {
       username: null,
       password1: null,
       password2: null,
+      nickname: null,
     }
   },
   methods: {
@@ -36,9 +39,11 @@ export default {
       const payload = {
         username, password1, password2
       }
-
       this.$store.dispatch('signUp', payload)
-
+      
+      // const nickname = this.nickname
+      // this.$store.dispatch('userdatasignUp', nickname)
+      // }
     }
   }
 }

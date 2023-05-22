@@ -63,7 +63,7 @@ export default {
       const authHeader = this.$store.getters.authHeader   // 유저 토큰
       axios({
         method: 'POST',
-        url: `${API_URL}/api/v1/articles/reviews/${ current_id }/create`,
+        url: `${API_URL}/api/v1/articles/reviews/${ current_id }/create/`,
         data: {content :this.review_comment, review : this.$route.params.review_id, user: currentuser,},
         headers: authHeader,   //user정보를 data에 넣을땐 토큰 추가필수
       })
