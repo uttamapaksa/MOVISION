@@ -27,7 +27,7 @@ def movie_detail(request, movie_pk):
 
 @api_view(['GET','POST'])
 def comment_list(request,movie_pk): #영화 댓글 생성
-    user =request.user
+    user = request.user
     movie = get_object_or_404(Movie, pk=movie_pk)
     serializer = MovieCommentSerializer(data=request.data)
     if request.method == 'POST':  # 생성

@@ -17,6 +17,7 @@ class User(AbstractUser):
 
 class Userdata(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    username = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     level = models.IntegerField(default=1)
     exp = models.IntegerField(default=1)

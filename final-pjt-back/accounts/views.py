@@ -14,14 +14,14 @@ from .serializers import UserdataSerializer
 def userdata(request, user_id):
 
     if request.method == 'GET':
-        userdata = get_object_or_404(Userdata, pk=user_id)
+        userdata = get_list_or_404(Userdata, user=user_id)
         serializer = UserdataSerializer(userdata, many=True)
         return Response(serializer.data)
     
     elif request.method == 'POST':
         serializer = UserdataSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user)  
+            serializer.save(user=request.user)
             # serializer = UserdataSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

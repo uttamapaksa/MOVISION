@@ -4,6 +4,7 @@ from django.conf import settings
 # Create your models here.
 class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='review')
+    username = models.CharField(max_length=50)
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -12,6 +13,7 @@ class Review(models.Model):
 
 class Review_Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviewcomments')
+    username = models.CharField(max_length=50)
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='reviewcomments')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
