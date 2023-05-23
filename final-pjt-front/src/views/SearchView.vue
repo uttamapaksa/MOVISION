@@ -40,9 +40,9 @@
         <button>검색</button>
       </div>
     </div>
-
+<!-- 영화 포스터,데이터 --> 
     <div class="search-result row">
-      <SearchViewItem class="col-3" v-for="(movie, idx) in movies" :key="idx" :movie="movie" :totalgenres="totalgenres"/>
+      <SearchViewItem class="searchitem col-3" v-for="(movie, idx) in movies" :key="idx" :movie="movie" :totalgenres="totalgenres"/>
     </div>
   </div>
 
@@ -75,14 +75,6 @@ export default {
     sortname() {
       return this.sorts[this.sort]
     },
-    // movies_by_genres() {
-    //   if (this.select_total) {
-    //     return this.$store.state.movies
-    //   }
-    //   else {
-    //     return this.$store.state.movies.filter(movie => Object.values(movie.genres).some(genre => this.select_genres.includes(genre)))
-    //   }
-    // },
     totalgenres() {
       return this.$store.getters.totalgenres
     },
@@ -90,9 +82,9 @@ export default {
       // 장르별 검색
       let movies_by_genres = []
       if (this.select_total) {
-        movies_by_genres = this.$store.state.movies;
+        movies_by_genres = this.$store.getters.movies;
       } else {
-        movies_by_genres = this.$store.state.movies.filter(movie => Object.values(movie.genres).some(genre => this.select_genres.includes(genre)));
+        movies_by_genres = this.$store.getters.movies.filter(movie => Object.values(movie.genres).some(genre => this.select_genres.includes(genre)));
       }
 
       // 제목별 검색
@@ -221,10 +213,5 @@ export default {
   border: solid 1px black;
   width: 60%;
   height: 70vh;
-}
-
-.searchitem {
-  width: 5vw;
-  height: 5vh;
 }
 </style>

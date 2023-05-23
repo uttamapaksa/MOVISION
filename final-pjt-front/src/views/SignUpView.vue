@@ -10,9 +10,16 @@
 
       <label for="password2"> password confirmation : &nbsp;</label>
       <input type="password" id="password2" v-model="password2">
-      <!-- <label for="nickname"> nickname : &nbsp;</label>
-      <input type="text" id="nickname" v-model="nickname"> -->
       
+      <label for="nickname"> nickname : &nbsp;</label>
+      <input type="text" id="nickname" v-model="nickname"><br><br>
+
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">장르</button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li  v-for="(genre, idx) in genres" :key="idx"><a class="dropdown-item" href="#" @click=choice(idx)>{{ genre }}</a></li>
+        </ul>
+      </div>
       &nbsp; <input type="submit" value="SignUp">
     </form>
   </div>
@@ -27,6 +34,8 @@ export default {
       password1: null,
       password2: null,
       nickname: null,
+      genres: ['hor', 'com', 'act',],
+      genre: '',
     }
   },
   methods: {
@@ -35,15 +44,20 @@ export default {
       const username = this.username
       const password1 = this.password1
       const password2 = this.password2
+      const nickname = this.nickname
+      const like_genre = this.genre
 
       const payload = {
-        username, password1, password2
+        username, password1, password2, nickname, like_genre,
       }
       this.$store.dispatch('signUp', payload)
       
       // const nickname = this.nickname
       // this.$store.dispatch('userdatasignUp', nickname)
       // }
+    },
+    choice(idx) {
+      this.genre = this.genres[idx]
     }
   }
 }

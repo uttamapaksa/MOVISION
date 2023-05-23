@@ -9,36 +9,86 @@
       </div>
       <div class="profile-status">프로필 정보
         <p></p>
-
-        {{ userdata }}
-        <p>아이디 : {{ userdata.username }} | <button v-if="userdata.user!==currentuser">팔로우</button></p>
-        <!-- <p>닉네임 : {{ userdata.nickname }}</p> -->
-        <p>팔로잉 | 팔로우</p>
-        <p>가입일 : {{ userdata.created_at}}</p>
-        <button v-if="userdata.user===currentuser">회원정보수정(버튼)</button>
+        <!-- {{ profile }} -->
+        <div>아이디 : {{ profile.username }} 
+          <p v-if="!isYourself">
+            <button @click="follow()">
+              <span v-if="isfollow">언팔로우</span>
+              <span v-if="!isfollow">팔로우</span>
+            </button>
+          </p>
+        </div>
+        <p>닉네임 : {{ profile.nickname }}</p>
+        <p>팔로잉 : {{ profile.followings.length }} | 팔로워 : {{ profile.followers.length }}</p>
+        <p>가입일 : {{ profile.created_at.slice(0,10)}}</p>
+        <button v-if="isYourself">회원정보수정(버튼)</button>
         <div>
-          <p>레벨 : {{ userdata.level }}</p>
-          <p>경험치 : {{ userdata.exp }}</p>
+          <p>레벨 : {{ profile.level }}</p>
+          <p>경험치 : {{ profile.exp }}</p>
         </div>
       </div>
     </div>
 
     <div class="profile-2 row">
-      <div class="article-num nums col-6">
-        내 글 : {{articles.length}} 개
+      <div @click="profileshow=1" class="article-num nums">
+        내 글<br>
+        {{ profile.reviews.length }} 개
       </div>
-      <div class="comment-num nums">
-        내 댓글 : {{ comments.length }} 개
+      <div @click="profileshow=2" class="comment-num nums">
+        내 댓글<br>
+        {{ profile.reviewcomments.length }} 개
       </div>
-      <div class="likes-num nums">likes
+      <div @click="profileshow=3" class="likes-num nums">
+        내가 좋아하는 영화<br>
+        {{ profile.like_movies.length }} 개
       </div>
-      <div class="bookmark-num nums">bookmark
+      <div @click="profileshow=4" class="bookmark-num nums">
+        내가 본 영화<br> 
+        {{ profile.seen_movies.length }} 개
       </div>
     </div>
-    
     <div class="profile-3">
-      <div class=""></div>
-      <div></div>
+      <div v-if="profileshow == 1" style="width: 100%;"> 
+        <router-link class="profile-3-item row" v-for="review in profile.reviews" :key="review.id" :to="{ name: 'ReviewDetialView', params: {review_id: review.id }}">
+          <div class="col-9">
+            제목 : {{ review.title }}<br>
+          </div>
+          <div class="col-3">
+            작성시간 : {{  review.created_at.slice(2, 10) }}-{{  review.created_at.slice(11, 16)}}
+          </div>
+        </router-link>
+      </div>
+      <div v-if="profileshow == 2" style="width: 100%;"> 
+        <router-link class="profile-3-item" v-for="comment in profile.reviewcomments" :key="comment.id" :to="{ name: 'ReviewDetialView', params: {review_id: comment.review }}">
+          <div class="col-9">
+            제목 : {{ review_articles[comment.review - 1].title }}<br>
+            내 댓글 : {{ comment.content }}
+          </div>
+          <div class="col-3">
+            작성시간 : {{  comment.created_at.slice(2, 10)}}-{{ comment.created_at.slice(11, 16) }}
+          </div>
+        </router-link>
+      </div>
+      <div v-if="profileshow == 3" style="width: 100%;"> 
+        <router-link class="profile-3-item" v-for="movie in profile.like_movies" :key="movie.id" :to="{ name: 'MovieDetailView', params: {movie_id: movie.id} }">
+          <div class="col-9">
+            제목 : {{ movie.title }}<br>
+          </div>
+          <div class="col-3">
+            평점 : {{  movie.vote_average }}
+          </div>
+        </router-link>
+      </div>
+      <div v-if="profileshow == 4" style="width: 100%;">
+        <router-link class="profile-3-item" v-for="movie in profile.seen_movies" :key="movie.id" :to="{ name: 'MovieDetailView', params: {movie_id: movie.id} }">
+          <div class="col-9">
+            제목 : {{ movie.title }}<br>
+          </div>
+          <div class="col-3">
+            평점 : {{  movie.vote_average }}
+          </div>
+        </router-link>
+      </div>
     </div>
   </div>
 
@@ -48,26 +98,38 @@
 <script>
 export default {
   name: 'ProfileView',
+  created() {
+    const profile_id = this.$route.params.profile_id
+    this.$store.dispatch('getProfile', profile_id)
+  },
+  data() {
+    return {
+      VUE_URL: 'http://localhost:8080',
+      profileshow: 1,
+    }
+  },
   computed: {
-    // article() {
-      //   return this.$store.state.articles.filter(article => article.user = this.currentuser)
-      // },
-      // currentuser() {
-        //   return this.$store.getters.currentuser
-        // }
-    articles() {
-      return this.$store.state.review_articles.filter(article => article.user)
-    },
-    comments() {
-      const review_comments = this.$store.state.review_comments.filter(comment => comment.user)
-      const party_comments = this.$store.state.party_comments.filter(comment => comment.user)
-      return [...review_comments, ...party_comments]
+    profile() {
+      return this.$store.getters.profile
     },
     currentuser() {
       return this.$store.getters.currentuser
     },
-    userdata() {
-      return this.$store.getters.userdata
+    isfollow() {
+      return this.profile.followers.some(person => person.id == this.currentuser)
+    },
+    isYourself() {
+      const profile_id = this.$route.params.profile_id
+      return this.currentuser == profile_id
+    },
+    review_articles() {
+      return this.$store.state.review_articles
+    },
+  },
+  methods: {
+    follow() {
+      const profile_id = this.$route.params.profile_id
+      this.$store.dispatch('follow', profile_id)
     },
   },
 }
@@ -93,22 +155,41 @@ export default {
   border: solid 1px black;
 }
 .profile-2 {
+  display: flex;
   margin: 0 auto;
   width: 90%;
-  height: 20vh;
+  height: 15vh;
   border: solid 1px black;
+  font-size: 2vh;
 }
+
+.nums {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid 1px black;
+  width: 25%;
+  height: 100%;
+}
+
 .profile-3 {
+  display: flex;
+  justify-content: center;
   margin: 0 auto;
   width: 90%;
   height: 45vh;
   border: solid 1px black;
 }
 
-.nums {
-  border: solid 1px black;
-  width: 25%;
-  height: 100%;
+.profile-3-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 100%;
+  height: 10vh;
+  border: solid 1px red;
 }
+
 
 </style>

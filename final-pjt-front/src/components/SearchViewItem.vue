@@ -1,6 +1,6 @@
 <template>
-<div class="card" @click="godetailmovie" >
-  <img :src="`https://image.tmdb.org/t/p/w400${movie.poster_path}`" class="card-img-top" alt="...">
+<div class="card snip1" @click="godetailmovie" >
+  <img :src="`https://image.tmdb.org/t/p/original${movie.poster_path}`" class="card-img-search" alt="...">
   <div class="card-body">
     <div class="card-text">
       제목 : {{ movie.title}}<hr>

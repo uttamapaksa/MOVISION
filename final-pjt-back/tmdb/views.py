@@ -57,9 +57,27 @@ def comment_detail(request, comment_pk):
     #         return Response(serializer.data)
 
 
+# 영화 좋아요 누르기
+@api_view(['POST'])
+def movie_like(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    user = request.user.pk
+    if movie.like_users.filter(pk=user).exists():
+        movie.like_users.remove(user)
+    else:
+        movie.like_users.add(user) 
+    return Response('movie_like_views.py')
 
-
-
+# 영화 봤어요 누르기
+@api_view(['POST'])
+def movie_seen(request, movie_pk):
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    user = request.user.pk
+    if movie.seen_users.filter(pk=user).exists():
+        movie.seen_users.remove(user)
+    else:
+        movie.seen_users.add(user)
+    return Response('movie_seen_views.py')
 
 
 

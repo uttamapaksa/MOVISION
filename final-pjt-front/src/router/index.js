@@ -11,8 +11,8 @@ import ReviewCreateView from '@/views/ReviewCreateView'
 import PartyCreateView from '@/views/PartyCreateView'
 import ReviewDetialView from '@/views/ReviewDetialView'
 import PartyDetialView from '@/views/PartyDetialView'
-Vue.use(VueRouter)
 
+Vue.use(VueRouter)
 const routes = [
 
   {

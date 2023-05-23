@@ -16,16 +16,16 @@ class Movie(models.Model):
     vote_average = models.FloatField()  #평점
     overview = models.TextField()   #개요
     poster_path = models.CharField(max_length=200)   #이미지
+    backdrop_path = models.CharField(max_length=200)
     youtube_key = models.CharField(max_length=100)   #유튜브
     genres = models.ManyToManyField(Genre, blank=True)   #장르
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True) #좋아요한사람수
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="like_movies", blank=True) # 좋아요 누른 사람
+    seen_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="seen_movies", blank=True) # 봤어요 누른
     actors = models.ManyToManyField(Actor, blank=True)  #배우
-
 
 class MovieComment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,  related_name="TMDBComment")
-    username = models.CharField(max_length=50)
     movie = models.ForeignKey(Movie, related_name="TMDBComment", on_delete=models.DO_NOTHING)
-    content = models.TextField()
+    content =models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

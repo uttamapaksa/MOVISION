@@ -7,22 +7,24 @@ export default {
     token: null,
 		currentuser: null,
 		currentusername: null,
-    userdata: null,
+    profile: null,
   },
   getters: {    
     isLogin: (state) => state.token ? true : false,
     authHeader: (state) => ({Authorization: `Token ${state.token}`}),
     currentuser: (state) => state.currentuser,
     currentusername: (state) => state.currentusername,
-    userdata: (state) => state.userdata,
+    profile: (state) => state.profile,
   },
   mutations: {
     SET_TOKEN: (state, token) => state.token = token,
     SET_CURRENT_USER: (state, user) => state.currentuser = user,
     SET_CURRENT_USERNAME: (state, username) => state.currentusername = username,
-    SET_USERDATA: (state, userdata) => state.userdata = userdata,
+    SET_PROFILE: (state, profile) => state.profile = profile,
   },
   actions: {
+
+    // 회원가입
     signUp(context, data) {
       console.log('signup.axios')
       axios({
@@ -34,35 +36,16 @@ export default {
         console.log(res)
         console.log('signup.then')
         context.commit('SET_TOKEN', res.data.key)
-        context.dispatch('getCurrentUser', 1)
+        context.dispatch('getCurrentUser')
+        router.push({name: 'MainView'})
       })
       .catch(err => {
         console.log(err)
         console.log('signup.catch')
       }) 
     },
-    userdatasignUp(context, id) {
-      console.log('userdatasignup.axios')
-      console.log(id)
-      axios({
-        method: 'post',
-        url: `${API_URL}/api/v1/profile/${id}/`,
-        data: {
-          user: id, nickname: id, username: this.getters.currentusername,
-        },
-        headers: this.getters.authHeader,
-      })
-      .then(res => {
-        console.log(res)
-        console.log('userdatasignup.then')
-        context.dispatch('getUserData')
-        router.push({name: 'ProfileView', params: {profile_id: id}})
-      })
-      .catch(err => {
-        console.log(err)
-        console.log('userdatasignup.catch')
-      })
-    },
+
+    // 로그인
     logIn(context, data) {     
       console.log('login.axios')
       axios({
@@ -74,7 +57,7 @@ export default {
         console.log(res)
         console.log('login.then')
         context.commit('SET_TOKEN', res.data.key)
-        context.dispatch('getCurrentUser', 0)
+        context.dispatch('getCurrentUser')
         // context.dispatch('getUserInfo')
       })
       .catch(err => {
@@ -82,18 +65,8 @@ export default {
         console.log('login.catch')
       })
     },
-    // getUserInfo({getters, commit}) {
-      //   axios({
-        //     method: 'get',
-        //     url: `${API_URL}/accounts/user/`,
-        //     headers: getters.authHeader
-        //   })
-        //     .then(res => {
-          //       console.log(res)
-          //       commit('SET_USERINFO', res.data)
-          //     })
-          //     .catch(err => console.log(err))
-          // },
+
+    // 로그아웃
     logOut({commit, getters}) {
       console.log('logout.axios')
       axios({
@@ -107,19 +80,19 @@ export default {
         commit('SET_TOKEN', null)
         commit('SET_CURRENT_USER', null)
         commit('SET_CURRENT_USERNAME', null)
-        commit('SET_USERDATA', null)
-        // router.push({name: 'LogInView'})
       })
       .catch(err => {
         console.log(err)
         console.log('logout.catch')
       })
     },
-    getCurrentUser({ dispatch, commit, getters }, isSignup) {
+
+    // 현재 로그인한 유저(나)
+    getCurrentUser({ commit, getters }) {
       console.log('currentuser.axios')
       axios({
-        url: `${API_URL}/accounts/user/`,
         method: 'get',
+        url: `${API_URL}/accounts/user/`,
         headers: getters.authHeader,
       })
       .then((res) => {
@@ -127,35 +100,48 @@ export default {
         console.log('currentuser.then')
         commit("SET_CURRENT_USER", res.data.pk)
         commit("SET_CURRENT_USERNAME", res.data.username)
-        if (isSignup) {
-          dispatch("userdatasignUp", res.data.pk)
-        } else {
-          dispatch('getUserData')
-        }
       })
       .catch((err) => {
         console.log(err)
         console.log('currentuser.catch')
       })
 		},
-    getUserData(context) {
-      const user_id = this.getters.currentuser
-      console.log(user_id)
-      console.log('getuserdata.axios')
+
+    // 현재 프로필 페이지
+    getProfile(context, id) {
+      console.log('getprofile.axios')
       axios({
-        method: 'get',
-        url: `${API_URL}/api/v1/profile/${user_id}/`,
+        method:'get',
+        url: `${API_URL}/api/v1/profile/${id}/`,
+      })
+      .then((res) => {
+        console.log(res)
+        console.log('getprofile.then')
+        context.commit('SET_PROFILE', res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+        console.log('getprofile.catch')
+      })
+    },
+    
+    // 팔로우, 언팔로우
+    follow(context, id) {
+      console.log('follow.axios')
+      axios({
+        method:'post',
+        url: `${API_URL}/api/v1/profile/${id}/follow/`,
         headers: this.getters.authHeader,
       })
-        .then((res) => {
-          console.log(res)
-          console.log('getuserdata.then')
-          context.commit("SET_USERDATA", res.data[0])
-        })
-        .catch((err) => {
-          console.log(err)
-          console.log('getuserdata.catch')
-        })
-    },
+      .then((res) => {
+        console.log(res)
+        console.log('follow.then')
+        context.dispatch('getProfile', id)
+      })
+      .catch((err) => {
+        console.log(err)
+        console.log('follow.catch')
+      })
+    }
   },
 }

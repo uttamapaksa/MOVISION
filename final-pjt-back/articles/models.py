@@ -3,7 +3,7 @@ from django.conf import settings
 
 # Create your models here.
 class Review(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='review')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
     username = models.CharField(max_length=50)
     title = models.CharField(max_length=100)
     content = models.TextField()

@@ -3,13 +3,15 @@
     <nav style="display: none;"></nav>
     
     <header>
-      <section @click='check' class="content-section" data-scroll>
-        <figure class="figure">
-          <video class="mainvideo" muted autoplay @ended="replay">
-            <source src="@/movieplay/movie.mp4" type="video/mp4">
-          </video>
-        </figure>
-      </section>
+      <div >
+        <section  class="content-section" data-scroll>
+          <figure class="figure">
+            <video ref="videoContainer" @wheel="handleWheelScroll" class="mainvideo" muted autoplay @ended="replay">
+              <source src="@/movieplay/movie.mp4" type="video/mp4">
+            </video>
+          </figure>
+        </section>
+      </div>
       <div class="maintext" data-aos="fade-up" data-aos-duration="1000">
         <div class="maintext-text">
           <div class="logocol" data-aos="fade" data-aos-duration="1000" data-aos-delay="200">
@@ -37,49 +39,61 @@
 
       <br><br><br>
       <br><br><br>
-    <div class="slide_wrapper">
-      <ul class="slides">
-        <li>slide 01</li>
-        <li>slide 02</li>
-        <li>slide 03</li>
-        <li>slide 04</li>
-        <li>slide 05</li>
-      </ul>
-    </div>
-    <p class="controls">
-      <span class="prev">prev</span>
-      <span class="next">next</span>
-      <span class="material-symbols-outlined">arrow_forward_ios</span>
-    </p>
+    ` <!-- 영화 포스터 -->
+      <!-- <h3 style="color: white; font-family: 'Helvetica Neue', Arial, sans-serif;">인기 영화</h3><br> -->
+      <div class="slide_wrapper">
+        <div class="prev" style="position: absolute; top: 50%; left: 5%; transform: translate(-50%, -50%); z-index: 1;">
+          <!-- <button>prev</button> -->
+          <svg style="position: absolut; top: 50%; left: 5%; transform: translate(-50%, -50%); z-index: 1;  fill: white;" xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="prev bi bi-chevron-compact-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223z"/>
+          </svg>
     
-    <div class="slide_wrapper2">
-      <ul class="slides2">
-        <li>slide 11</li>
-        <li>slide 12</li>
-        <li>slide 13</li>
-        <li>slide 14</li>
-        <li>slide 15</li>
-      </ul>
-    </div>
+        </div>
+        <div class="next" style="position: absolute; top: 50%; left: 95%; transform: translate(-50%, -50%); z-index: 1;">
+          <svg style="position: absolute; top: 50%; left: 95%; transform: translate(-50%, -50%); z-index: 1;  fill: white;" xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="next bi bi-chevron-compact-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671z"/>
+          </svg>
+        </div>
+        <ul class="slides">
+          <li class="snip1" v-for="(populor_movie,idx) in top10_movies" :key="idx">
+              <div style="position: relative;">
+                <button @click="gomovie(populor_movie.id)" style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); ">영화 정보보기</button>
+                <p style="position:absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 3vh;">{{populor_movie.title}}</p>
+                <img :src="`https://image.tmdb.org/t/p/original${populor_movie.backdrop_path}`" class="card-img-top" alt="..." style="border-radius: 15px; object-fit: cover; width: 100%; height: 100%;">
+              </div>
+          </li>
+        </ul>
+      </div>
+      <br>
+      <!-- <p style="color: white; font-family: 'Helvetica Neue', Arial, sans-serif; margin-top: 15px;">최신 영화</p> -->
+      <div class="slide_wrapper2">
+        <ul class="slides2">
+          <li class="snip1" v-for="(recent30_movie,idx) in recent30_movies" :key="idx">
+            <div style="position: relative;">
+              <button @click="gomovie(recent30_movie.id)" style="position: absolute; top: 65%; left: 50%; transform: translate(-50%, -50%); ">영화 정보보기</button>
+              <p style="position:absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5vh;">{{recent30_movie.title}}</p>
+              <img :src="`https://image.tmdb.org/t/p/original${recent30_movie.backdrop_path}`" class="card-img-top" alt="..." style="border-radius: 10px; object-fit: cover; width: 100%; height: 100%;">
+            </div>
+          </li>
+        </ul>
+      </div>
 
-    <div class="slide_wrapper3">
-      <ul class="slides3">
-        <li>slide 21</li>
-        <li>slide 22</li>
-        <li>slide 23</li>
-        <li>slide 24</li>
-        <li>slide 25</li>
-      </ul>
-    </div>
-
-
-
+      <!-- <p style="color: white; font-family: 'Helvetica Neue', Arial, sans-serif;">개봉 예정 영화</p> -->
+      <div class="slide_wrapper3">
+        <ul class="slides3">
+          <li class="snip1" v-for="(new10_movie,idx) in new10_movies" :key="idx">
+            <div style="position: relative;">
+              <button @click="gomovie(new10_movie.id)" style="position: absolute; top: 65%; left: 50%; transform: translate(-50%, -50%); ">영화 정보보기</button>
+              <p style="position:absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5vh;">{{new10_movie.title}}</p>
+              <img :src="`https://image.tmdb.org/t/p/original${new10_movie.backdrop_path}`" class="card-img-top" alt="..." style="border-radius: 10px; object-fit: cover; width: 100%; height: 100%;">
+            </div>
+          </li>
+        </ul>
+      </div>
 
       <div class="mainbox"  data-aos="fade-up" data-aos-duration="1000">
-        <h3>최신 영화</h3>
-        <br>
-        <h3>개봉 예정 영화</h3>
-        <br>
+        <br><br><br><br><br><br>
+     
       </div>
       
       <div class="searchbox" data-aos="fade-up" data-aos-duration="1000">
@@ -170,16 +184,29 @@ export default {
   name: 'MainView',
   data() {
     return {
-      maintextvis: 0
+      maintextvis: 0,
+      scale: 1, // 초기 축소 비율
+      scaleFactor: 0.1, // 스크롤 한 번당 축소 비율
+      minScale: 0.5, // 최소 축소 비율
+      maxScale: 1, // 최대 축소 비율
     }
   },
   mounted() {
-    if (!this.$store.state.movies.length) {
+    if (!this.$store.getters.movies.length) {
       this.$store.dispatch('fetchMovies');
-      console.log(this.$store.state.movies)
+      // console.log(this.$store.getters.movies)
     } else {
-      console.log(this.$store.state.movies)
+      // this.$store.dispatch('fetchMovies');
+      // console.log(this.$store.getters.movies)
     }
+    console.log(this.$store.getters.top10_movies)
+
+    //휠스크롤 영상 축소
+    
+    window.addEventListener('wheel', this.handleWheelScroll);
+
+    // document.body.style.overflow = 'hidden';
+
 
     this.numcount()
     window.addEventListener('scroll', this.handleScroll)
@@ -250,96 +277,125 @@ export default {
         },600);
       }
     }
-  var timer =undefined;    // 자동 이동 
-  
-  function autoSlide() {
-    if(timer ==undefined) {
-      timer =setInterval(function(){   //반복호출
-        moveSlide(currentIdx +1);
-      }, 3000);
+    var timer =undefined;    // 자동 이동 
+    
+    function autoSlide() {
+      if(timer ==undefined) {
+        timer =setInterval(function(){   //반복호출
+          moveSlide(currentIdx +1);
+        }, 3000);
+      }
     }
-  }
-  autoSlide();
-  function stopSlide() {
-    clearInterval(timer);
-  }
-  slides.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
-    stopSlide();
-  });
-  slides.addEventListener('mouseleave',function(){
     autoSlide();
-  }) //
-  // 2,3번 슬라이드
-  var slides2 = this.$el.querySelector('.slides2');
-  var slides3 = this.$el.querySelector('.slides3');
-  var slide2 = this.$el.querySelectorAll('.slides2 li');
-  var slide3 = this.$el.querySelectorAll('.slides3 li');
-  var slideCount2 =slide2.length;
-  var slideCount3 =slide3.length;
+    function stopSlide() {
+      clearInterval(timer);
+    }
+    slides.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
+      stopSlide();
+    });
+    slides.addEventListener('mouseleave',function(){
+      autoSlide();
+    }) //
+    // 2,3번 슬라이드
+    var slides2 = this.$el.querySelector('.slides2');
+    var slides3 = this.$el.querySelector('.slides3');
+    var slide2 = this.$el.querySelectorAll('.slides2 li');
+    var slide3 = this.$el.querySelectorAll('.slides3 li');
+    var slideCount2 =slide2.length;
+    var slideCount3 =slide3.length;
 
-  makeClone2();
-  makeClone3();
+    makeClone2();
+    makeClone3();
 
-  function makeClone2(){
-    for (var j =0; j < slideCount; j++) {
-      var cloneSlide2 = slide[j].cloneNode(true);
-      cloneSlide2.classList.add('clone');
-      slides2.appendChild(cloneSlide2);
-    }}
-  function makeClone3(){
-    for (var j =0; j < slideCount; j++) {
-      var cloneSlide3 = slide[j].cloneNode(true);
-      cloneSlide3.classList.add('clone');
-      slides3.appendChild(cloneSlide3);
-    }}
-  updateWidth2();
-  // setInitialPos2(); 
-  updateWidth3();
-  // setInitialPos3(); 
+    function makeClone2(){
+      for (var j =0; j < slideCount; j++) {
+        var cloneSlide2 = slide[j].cloneNode(true);
+        cloneSlide2.classList.add('clone');
+        slides2.appendChild(cloneSlide2);
+      }}
+    function makeClone3(){
+      for (var j =0; j < slideCount; j++) {
+        var cloneSlide3 = slide[j].cloneNode(true);
+        cloneSlide3.classList.add('clone');
+        slides3.appendChild(cloneSlide3);
+      }}
+    updateWidth2();
+    // setInitialPos2(); 
+    updateWidth3();
+    // setInitialPos3(); 
 
-    function updateWidth2() {
-      var currentSlides2 = slides2.querySelectorAll('.slides2 li');
-      var newSlideCount2 = currentSlides2.length;
-      var newWidth2 = (slideWidth + slideMargin) * newSlideCount2 - slideMargin + 'px';
-      slides2.style.width = newWidth2;
-    }   
-    function updateWidth3() {
-      var currentSlides3 = slides3.querySelectorAll('.slides3 li');
-      var newSlideCount3 = currentSlides3.length;
-      var newWidth3 = (slideWidth + slideMargin) * newSlideCount3 - slideMargin + 'px';
-      slides3.style.width = newWidth3;
-    }   //
+      function updateWidth2() {
+        var currentSlides2 = slides2.querySelectorAll('.slides2 li');
+        var newSlideCount2 = currentSlides2.length;
+        var newWidth2 = (slideWidth + slideMargin) * newSlideCount2 - slideMargin + 'px';
+        slides2.style.width = newWidth2;
+      }   
+      function updateWidth3() {
+        var currentSlides3 = slides3.querySelectorAll('.slides3 li');
+        var newSlideCount3 = currentSlides3.length;
+        var newWidth3 = (slideWidth + slideMargin) * newSlideCount3 - slideMargin + 'px';
+        slides3.style.width = newWidth3;
+      }   //
 
-  slides2.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
-    slowSlide2();
-  });
-  slides2.addEventListener('mouseleave',function(){
-    autoSlide2();
-  }) //
-  function slowSlide2() {
-    slides2.style.animation = 'slide-animation2 52s linear infinite'
-  }
-  function autoSlide2() {
-    slides2.style.animation = 'slide-animation2 27s linear infinite'
-  }
-  slides3.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
-    slowSlide3();
-  });
-  slides3.addEventListener('mouseleave',function(){
-    autoSlide3();
-  }) //
-  function slowSlide3() {
-    slides3.style.animation = 'slide-animation3 50s linear infinite'
-  }
-  function autoSlide3() {
-    slides3.style.animation = 'slide-animation3 25s linear infinite'
-  }
-
-
-
+    slides2.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
+      slowSlide2();
+    });
+    slides2.addEventListener('mouseleave',function(){
+      autoSlide2();
+    }) //
+    function slowSlide2() {
+      slides2.style.animation = 'slide-animation2 52s linear infinite'
+    }
+    function autoSlide2() {
+      slides2.style.animation = 'slide-animation2 27s linear infinite'
+    }
+    slides3.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
+      slowSlide3();
+    });
+    slides3.addEventListener('mouseleave',function(){
+      autoSlide3();
+    }) //
+    function slowSlide3() {
+      slides3.style.animation = 'slide-animation3 50s linear infinite'
+    }
+    function autoSlide3() {
+      slides3.style.animation = 'slide-animation3 25s linear infinite'
+    }
   }, 
+  computed: {
+    top10_movies() {
+  
+      return this.$store.getters.top10_movies
+    },
+    recent30_movies() {
+      return this.$store.getters.recent30_movies
+    },
+    new10_movies() {
+      return this.$store.getters.new10_movies
+    },
+  },
 
   methods: {
+    // 영상 확대 축소
+    handleWheelScroll(event) {
+      const mainVideo = document.querySelector('.mainvideo');
+      // 휠 스크롤 방향에 따라 축소 비율 조절
+      if (event.deltaY > 0) {
+        this.scale -= 0.1; // 비디오 크기조절
+        mainVideo.style.opacity = 0.6;   //비디오 투명도 조절
+        this.scale = Math.max(this.scale, this.minScale);
+      } else {
+        this.scale += this.scaleFactor;
+        this.scale = Math.min(this.scale, this.maxScale);
+      }
+      // 비디오 컨테이너에 축소 비율 적용
+      this.$refs.videoContainer.style.transform = `scale(${this.scale})`;
+      if (this.scale <0.7) {
+        document.body.style.overflow = '';
+        // console.log(document.body.style)
+      }
+    },
+
     replay(event) {
       event.target.currentTime = 0;
       event.target.play();
@@ -365,27 +421,10 @@ export default {
       });  
     });
     },
-
-  check() {
-
-  }
-    // handleScroll() {
-    //   const service = document.querySelector('.maintext');
-    //   const threshold = window.pageYOffset;
-    //   const serviceTop = service.offsetTop-710;
-    //   console.log(service)
-    //   console.log(threshold)
-    //   console.log(serviceTop)
-      
-
-    //   if (serviceTop < threshold) {
-    //     this.isServiced = 1
-    //     console.log(this.isServiced, 'aaaaaaaaaaa')
-    //   } else {
-    //     this.isServiced = 0
-    //     console.log(this.isServiced, 'aaaaaaaaaaa')
-    //   }
-    // }
+    gomovie(movie_id) {
+      // console.log(movie_id)
+      this.$router.push({ name: 'MovieDetailView', params: { movie_id: movie.id }})
+    },
   },
 }
 
@@ -393,6 +432,7 @@ export default {
 
 <style>
 /* @import url("http://www.songdobeer.com/songdo_html/lib/simplyscroll/simplyscroll.css"); */
+
 
 #mainview {
   display: flex;
@@ -407,6 +447,8 @@ header {
   flex-direction: column;
   align-items: center;
 }
+
+
 
 .maintext {
   display: flex;
@@ -455,7 +497,11 @@ header {
 }
 
 .mainvideo {
-  width: 100%;
+  width: 2000px;
+  /* 비디오 확대축소 애니메이션 */
+  transition: transform 0.5s ease;   
+  opacity: 1;
+  /* filter: blur(2px); 약간의 흐릿한 효과를 주는 필터 */
 }
 
 .mainbox {
@@ -554,7 +600,7 @@ header {
 /* 슬라이드 css */
 .slide_wrapper {   
   position: relative;
-  width: 95%;
+  /* width: 95%; */
   margin: 0 auto;
   height: 420px;
   overflow: hidden;
@@ -568,8 +614,8 @@ header {
   transition: 0.5s ease-out;
 }
 .slides li{
-  width: 550px;
-  height: 390px;
+  width: 780px;
+  height: 420px;
   background: #ccc;
   float: left;
   border-radius: 15px;
@@ -577,12 +623,41 @@ header {
 .slides li:not(:last-child){
   margin-right: 18px;
 }
+
+/* 마우스 오버 효과 */
+.snip1 {
+  overflow: hidden;
+  background: #000000;
+}
+
+.snip1 * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: all 0.45s ease-in-out;
+  transition: all 0.45s ease-in-out;
+}
+
+.snip1 img {
+  max-width: 100%;
+  position: relative;
+  opacity: 1;
+}
+
+
+.snip1:hover img,
+.snip1.hover img {
+  opacity: 0.5;
+  -webkit-transform: scale(1.05);
+  transform: scale(1.05);
+}
+
+
 /* 슬라이드 css 2 */
 .slide_wrapper2 {   
   position: relative;
-  width: 95%;
+  /* width: 95%; */
   margin: 0 auto;
-  height: 180px;
+  height: 160px;
   overflow: hidden;
 }
 .slides2{
@@ -601,8 +676,8 @@ header {
   }
 }
 .slides2 li{
-  width: 260px;
-  height: 160px;
+  width: 250px;
+  /* height: 160px; */
   background: #ccc;
   float: left;
   border-radius: 10px;
@@ -614,7 +689,7 @@ header {
 /* 슬라이드 css 3 */
 .slide_wrapper3 {   
   position: relative;
-  width: 95%;
+  /* width: 95%; */
   margin: 0 auto;
   height: 180px;
   overflow: hidden;
@@ -634,8 +709,8 @@ header {
   }
 }
 .slides3 li{
-  width: 260px;
-  height: 160px;
+  width: 250px;
+  /* height: 160px; */
   background: #ccc;
   float: left;
   border-radius: 10px;

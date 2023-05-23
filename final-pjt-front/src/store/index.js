@@ -4,6 +4,7 @@ import axios from 'axios'
 import createPersistedState from 'vuex-persistedstate'
 import accounts from './modules/accounts'
 import moviestore from './modules/moviestore'
+
 Vue.use(Vuex)
 
 const API_URL = 'http://127.0.0.1:8000'
@@ -84,5 +85,5 @@ export default new Vuex.Store({
   modules: {
     accounts,
     moviestore,
-  }
+  },
 })

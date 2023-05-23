@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <router-link v-if="isLogin" :to="{ name: 'ProfileView', params: { profile_id: currentuser }}">profile</router-link>
+      <a @click.prevent="apptoProfile">{{currentusername}}</a> 님의 프로필
     </nav>
     <router-view/>
   </div>
@@ -76,6 +76,9 @@ export default {
     },
     currentuser() {
       return this.$store.getters.currentuser
+    },
+    currentusername() {
+      return this.$store.getters.currentusername
     }
   },
   methods: {
@@ -93,6 +96,10 @@ export default {
     logout() {
       this.$store.dispatch('logOut')
     },
+    apptoProfile() {
+      this.$store.dispatch('getProfile', this.currentuser)
+      this.$router.push({name: 'ProfileView', params: {profile_id: this.currentuser}})
+    }
   },
 }
 </script>

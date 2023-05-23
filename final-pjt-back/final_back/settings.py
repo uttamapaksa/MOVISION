@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 
 REST_AUTH = { # 회원가입시 토큰 발급
     'SESSION_LOGIN': False,
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer', 
 }
 
 SITE_ID = 1

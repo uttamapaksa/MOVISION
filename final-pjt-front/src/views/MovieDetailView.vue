@@ -1,9 +1,11 @@
 <template>
 <div id="moviedetailview">
-  <!-- <div class="poster-header"></div> -->
+  <div class="poster-header" style="position;absolute; ">
+    <img :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"  style="opacity: 0.5; z-index: 1; object-fit: cover; width: 100%; height: 100%;" alt="...">
+  </div>
   <div class="poster-line">
     <div class="poster-img">
-      <img :src="`https://image.tmdb.org/t/p/w400${movie.poster_path}`" class="card-img-top" alt="...">
+      <img :src="`https://image.tmdb.org/t/p/w400${movie.poster_path}`" class="card-img-detail" alt="...">
     </div>
 
     <div class="poster-detail">
@@ -21,9 +23,12 @@
         </div>
         <div class="row h-25">
           <div class="detailss col-2">평점 {{ movie.vote_average }}</div>
-          <div class="detailss col-2">좋아요 {{ movie.like_users }}</div>
-          <div class="detailss col-2"> 찜하기 버튼(MtoM)</div>
-          <div class="detailss col-2"> 본 영화 버튼(MtoM)</div>
+          <div class="detailss col-2" @click="likemovie">
+            좋아요 개수 : {{ movie.like_users.length }}
+          </div>
+          <div class="detailss col-2" @click="seenmovie"> 본 영화 버튼(MtoM)
+            봤어요 개수 : {{ movie.seen_users.length}}
+          </div>
           <!-- <div class="detailss col-2">언어(보류)</div> -->
         </div>
         <!-- <div  class="ratio ratio-16x9">
@@ -81,12 +86,8 @@ export default {
   },
   computed: {
     movie() {
-      return this.$store.state.movie
+      return this.$store.getters.movie
     },
-  //   movie() {
-  //     const current_id = this.$route.params.movie_id
-  //     return this.$store.state.movies.filter(movie => movie.id = current_id )[0]
-  //   },
     release_year() {
       return this.movie.release_date.slice(0,4)
     },
@@ -99,10 +100,13 @@ export default {
   // },
     movie_comments() {
       const movie_id = this.$route.params.movie_id
-      return this.$store.state.movie_comments.filter(comment => comment.movie == movie_id)
+      return this.$store.getters.movie_comments.filter(comment => comment.movie == movie_id)
     },
     currentuser() {
       return this.$store.getters.currentuser
+    },
+    movie_id() {
+      return this.$route.params.movie_id
     }
   },
   methods: {
@@ -134,15 +138,31 @@ export default {
         url: `${API_URL}/api/v1/movie_comment/${comment_id}/`,
       })
        .then(res => {
-        const movie_id = this.$route.params.movie_id
+         const movie_id = this.$route.params.movie_id
         console.log(res)
         this.$store.dispatch('getMovieComments', movie_id)
        })
        .catch(err => {
          console.log(err)
        })
-    }
-  }
+    },
+    likemovie() {
+      const movie_id = this.$route.params.movie_id
+      if (!this.currentuser) {
+        alert('로그인 해야 좋아요를 누를 수 있습니다')
+        return
+      }
+      this.$store.dispatch('likeMovie', movie_id)
+    },
+    seenmovie() {
+      const movie_id = this.$route.params.movie_id
+      if (!this.currentuser) {
+        alert('로그인 해야 봤어요를 누를 수 있습니다')
+        return
+      }
+      this.$store.dispatch('seenMovie', movie_id)
+    },
+  },
 }
 </script>
 
@@ -172,7 +192,7 @@ export default {
 }
 
 /* 포스터 이미지 */
-.card-img-top {
+.card-img-detail {
   height: 100%;
   /* object-fit: cover; */
 }
