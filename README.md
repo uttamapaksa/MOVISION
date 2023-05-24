@@ -13,7 +13,7 @@ pip install -U scikit-learn
 ```
 python manage.py makemigrations<br>
 python manage.py migrate<br>
-python manage.py loaddata movies.json<br>
+python manage.py loaddata movies.json actors.json genres.json<br>
 python manage.py runserver<br>
 
 ## front
