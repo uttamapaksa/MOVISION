@@ -11,12 +11,12 @@ class CustomRegisterSerializer(RegisterSerializer):
     level = serializers.IntegerField(default=1)
     exp = serializers.IntegerField(default=1)
     nickname = serializers.CharField()
-    like_genre = serializers.ChoiceField(choices=User.GENRECHOICE)
+    like_genre = serializers.IntegerField()
 
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'email', 'level', 'exp', 'nickname')
+        fields = ('username', 'password', 'email', 'level', 'exp', 'nickname', 'like_genre')
 
     def get_cleaned_data(self):
         return {
@@ -85,6 +85,7 @@ class UserSerializer(serializers.ModelSerializer):
             model = User
             fields = ('id', 'username', 'nickname')
     followers = FollowerSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = User

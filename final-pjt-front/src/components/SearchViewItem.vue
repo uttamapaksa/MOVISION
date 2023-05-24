@@ -1,5 +1,5 @@
 <template>
-<div class="card snip1" @click="godetailmovie" >
+<div :key="movie.id" class="card snip1" @click="godetailmovie" >
   <img :src="`https://image.tmdb.org/t/p/original${movie.poster_path}`" class="card-img-search" alt="...">
   <div class="card-body">
     <div class="card-text">

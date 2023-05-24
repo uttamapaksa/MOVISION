@@ -1,11 +1,11 @@
 <template>
-<div id="moviedetailview">
-  <div class="poster-header" style="position;absolute; ">
-    <img :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"  style="opacity: 0.5; z-index: 1; object-fit: cover; width: 100%; height: 100%;" alt="...">
-  </div>
+<div>
   <div class="poster-line">
-    <div class="poster-img">
-      <img :src="`https://image.tmdb.org/t/p/w400${movie.poster_path}`" class="card-img-detail" alt="...">
+    <div class="poster-header" style="position:absolute; ">
+      <img :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"  style="opacity: 0.5; z-index: -10; object-fit: cover; width: 100%; height: 100%;" alt="...">
+    </div>
+    <div class="poster-img" style="z-index: 20;">
+      <img :src="`https://image.tmdb.org/t/p/w400${movie.poster_path}`" class="card-img-detail" alt="..." style="z-index: 20;"> 
     </div>
 
     <div class="poster-detail">
@@ -16,18 +16,29 @@
           </div>
         </div>
         <div class="row h-25">
-          <div class="detailss col-2">장르{{ movie.genres }}</div>
+          <div class="detailss col-2">장르
+            <span v-for="genre in movie.genres" :key="genre.id">
+              {{ genre.name }}
+            </span>
+          </div>
           <div class="detailss col-2">인기 {{ movie.popularity }}</div>
           <div class="detailss col-2">개봉일{{ movie.release_date }}</div>
-          <div class="detailss col-2">예고편보기</div>
+          <div class="detailss col-2">
+            <!-- <router-link :to="`https://www.youtube.com/`" target="_blank">예고편 보기</router-link> -->
+            <a :href="`https://www.youtube.com/watch?v=${movie.youtube_key}`">예고편 보기</a> 
+          </div>
         </div>
         <div class="row h-25">
           <div class="detailss col-2">평점 {{ movie.vote_average }}</div>
           <div class="detailss col-2" @click="likemovie">
             좋아요 개수 : {{ movie.like_users.length }}
+            ❤
           </div>
-          <div class="detailss col-2" @click="seenmovie"> 본 영화 버튼(MtoM)
+          <div class="detailss col-2" @click="seenmovie">
             봤어요 개수 : {{ movie.seen_users.length}}
+            <div>
+              ⭐
+              </div>
           </div>
           <!-- <div class="detailss col-2">언어(보류)</div> -->
         </div>
@@ -43,10 +54,8 @@
     
   </div>
 
-  <div class="one-comment">one comment
-    <input type="text" v-model="one_comment" @keyup.enter="save_comment">
-    <button @click="save_comment">댓글작성</button>
-
+  <div class="one-comment">한줄평
+    
     <div v-for="comment in movie_comments" :key="comment.id">
       {{ comment.content }} | 
       {{ comment.username }} | 
@@ -54,8 +63,17 @@
       <button v-if="comment.user==currentuser" @click="movieCommentDelete(comment.id)">삭제 </button>
     </div>
   </div>
+  <div>
+    <input type="text" v-model="one_comment" @keyup.enter="save_comment">
+    <button @click="save_comment">한줄평 작성</button>
+  </div>
   <div class="">이 영화를 좋아하는 사람들이 본 영화</div>
-  <div class="director-actor">director-actor</div>
+  <div class="director-actor">
+    <div v-for="actor in movie.actors" :key="actor.id" class="actors-item">
+      {{ actor.name }}
+      <img :src="`https://image.tmdb.org/t/p/original${actor.poster_path}`" class="actor-image" alt="...">
+    </div>
+  </div>
   <div class="detail-ost">OST</div>
 
   <div class="reviews row">
@@ -167,12 +185,6 @@ export default {
 </script>
 
 <style>
-/* .poster-header {
-  width: 90%;
-  height: 10vh;
-  background: orange;
-  overflow: hidden;
-} */
 
 /* 포스터+설명 박스 */
 .poster-line {
@@ -240,10 +252,16 @@ export default {
 }
 
 .director-actor {
+  display: flex;
   border: solid 3px blue;
   width: 90%;
   height: 35vh;
 }
+
+.actor-image {
+  height: 80%;
+}
+
 .detail-ost {
   border: solid 3px blue;
   width: 90%;

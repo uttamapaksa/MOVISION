@@ -6,7 +6,7 @@ import RecommendView from '../views/RecommendView'
 import CommunityView from '../views/CommunityView'
 import ProfileView from '../views/ProfileView'
 import SignUpView from '../views/SignUpView'
-import MovieDetailView from '../views/MovieDetailView'
+import MovieDetailView from '../views/MovieDetailView.vue'
 import ReviewCreateView from '@/views/ReviewCreateView'
 import PartyCreateView from '@/views/PartyCreateView'
 import ReviewDetialView from '@/views/ReviewDetialView'
@@ -76,7 +76,26 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  
 })
+
+// router.beforeRouteUpdate((to, from, next) => {
+//   // 모든 URL 이동 시 실행되는 로직
+//   console.log('URL이 변경되어 모든 컴포넌트를 새로 렌더링합니다.');
+//   next();
+// });
+
+  // router.beforeEach(to, from, next) {
+  //   // this.maintextvis =  0,
+  //   console.log('이동')
+  //   this.scale = 1 // 초기 축소 비율
+  //   const mainVideo = document.querySelector('.mainvideo')
+  //   mainVideo.style.opacity = 1;
+  //   this.$refs.videoContainer.style.transform = `scale(${this.scale})`;
+  //   document.body.style.overflow = '';
+  //   next()
+  // },
+
 
 export default router

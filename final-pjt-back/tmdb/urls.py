@@ -12,4 +12,6 @@ urlpatterns = [
     path('movie_comment/<int:comment_pk>/', views.comment_detail), # 삭제 , 수정 , 세부페이지는 생략
     # path('detail/<int:rating_pk>/rating_delete/', views.rating_delete),
     # path('detail/<int:movie_pk>/rating_update/', views.rating_update),
+    path('search/<str:movie_name>/', views.search_movie),  #영화 검색
+    path('<int:user_pk>/recommendation/', views.user_like_movie),
 ]

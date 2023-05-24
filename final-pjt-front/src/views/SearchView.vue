@@ -1,6 +1,5 @@
 <template>
 <div>
-
   <div>
     제목 : <input type="text" :value="titleinput" @input="titleinput = $event.target.value">
   </div><br>
@@ -44,8 +43,8 @@
     <div class="search-result row">
       <SearchViewItem class="searchitem col-3" v-for="(movie, idx) in movies" :key="idx" :movie="movie" :totalgenres="totalgenres"/>
     </div>
+    
   </div>
-
 </div>
 </template>
 
@@ -136,6 +135,9 @@ export default {
     }
   },
   methods: {
+    refreshComponent() {
+      this.searchview;
+    },
     checksort(idx) {
       this.sort = idx
     },
@@ -158,7 +160,7 @@ export default {
     },
     isSelected(id) {
       return this.select_genres.includes(id)
-    }
+    },
   }
 }
 </script>

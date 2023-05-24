@@ -6,7 +6,7 @@
       <div >
         <section  class="content-section" data-scroll>
           <figure class="figure">
-            <video ref="videoContainer" @wheel="handleWheelScroll" class="mainvideo" muted autoplay @ended="replay">
+            <video @wheel="handleWheelScroll" class="mainvideo" muted autoplay @ended="replay">
               <source src="@/movieplay/movie.mp4" type="video/mp4">
             </video>
           </figure>
@@ -42,14 +42,14 @@
     ` <!-- 영화 포스터 -->
       <!-- <h3 style="color: white; font-family: 'Helvetica Neue', Arial, sans-serif;">인기 영화</h3><br> -->
       <div class="slide_wrapper">
-        <div class="prev" style="position: absolute; top: 50%; left: 5%; transform: translate(-50%, -50%); z-index: 1;">
+        <div class="prev" @click='prev' style="position: absolute; top: 50%; left: 5%; transform: translate(-50%, -50%); z-index: 1;">
           <!-- <button>prev</button> -->
           <svg style="position: absolut; top: 50%; left: 5%; transform: translate(-50%, -50%); z-index: 1;  fill: white;" xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="prev bi bi-chevron-compact-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223z"/>
           </svg>
     
         </div>
-        <div class="next" style="position: absolute; top: 50%; left: 95%; transform: translate(-50%, -50%); z-index: 1;">
+        <div class="next" @click='next' style="position: absolute; top: 50%; left: 95%; transform: translate(-50%, -50%); z-index: 1;">
           <svg style="position: absolute; top: 50%; left: 95%; transform: translate(-50%, -50%); z-index: 1;  fill: white;" xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="next bi bi-chevron-compact-right" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671z"/>
           </svg>
@@ -98,7 +98,7 @@
       
       <div class="searchbox" data-aos="fade-up" data-aos-duration="1000">
         <div class="searchinput"></div>
-        <router-link :to="{name: 'search'}">
+        <router-link :to="{name: 'SearchView'}">
           <div class="searchsubmit">
           </div>
         </router-link>
@@ -123,7 +123,7 @@
             <span>현재 가장 HOT한 영화 인기 순위<br></span>
           </h3>
           <div class="custom-1yltisf">
-            <router-link :to="{name: 'popular'}" class="custom-1cqzdpo">인기순위 보기</router-link>
+            <!-- <router-link :to="{name: 'popular'}" class="custom-1cqzdpo">인기순위 보기</router-link> -->
           </div>
         </div>
         <img class="mainimg" src="@/assets/mainpopular.jpg" alt="mainpopular">
@@ -136,7 +136,7 @@
             <span>내 맘대로 고르는 맞춤 영화 추천<br></span>
           </h3>
           <div class="custom-1yltisf">
-            <router-link :to="{name: 'recommend'}" class="custom-1cqzdpo">영화 추천받기</router-link>
+            <router-link :to="{name: 'RecommendView'}" class="custom-1cqzdpo">영화 추천받기</router-link>
           </div>
         </div>
         <img class="mainimg" src="@/assets/mainrecommend.jpg" alt="mainrecommend">
@@ -172,7 +172,6 @@
 <script src="https://unpkg.com/scroll-out/dist/scroll-out.min.js"></script>
 <script>
 AOS.init();
-
 // import VueSimpleScrollbar from 'vue-simple-scrollbar'
 // import common from '@/assets/js/common.js'
 import $ from 'jquery'
@@ -186,49 +185,63 @@ export default {
     return {
       maintextvis: 0,
       scale: 1, // 초기 축소 비율
-      scaleFactor: 0.1, // 스크롤 한 번당 축소 비율
+      scaleFactor: 0.05, // 스크롤 한 번당 축소 비율
       minScale: 0.5, // 최소 축소 비율
       maxScale: 1, // 최대 축소 비율
+      pass_scrolling :1,
+      currentIdx : 0,
+      slideCount: 0,
+      slideWidth: 550,
+      slideMargin: 18,
     }
+  },
+  beforeRouteLeave(to, from, next) {
+        // this.maintextvis =  0,
+    console.log('이동')
+    this.scale = 1 // 초기 축소 비율
+    const mainVideo = document.querySelector('.mainvideo')
+    mainVideo.style.opacity = 1;
+    document.querySelector('.mainvideo').style.transform = `scale(${this.scale})`;
+    document.body.style.overflow = '';
+    this.pass_scrolling =0
+    next()
   },
   mounted() {
     if (!this.$store.getters.movies.length) {
       this.$store.dispatch('fetchMovies');
       // console.log(this.$store.getters.movies)
     } else {
-      // this.$store.dispatch('fetchMovies');
+      this.$store.dispatch('fetchMovies');
       // console.log(this.$store.getters.movies)
     }
     console.log(this.$store.getters.top10_movies)
 
     //휠스크롤 영상 축소
-    
-    window.addEventListener('wheel', this.handleWheelScroll);
+    if (this.pass_scrolling) {
+      window.addEventListener('wheel', this.handleWheelScroll);
+      window.addEventListener('scroll', this.handleScroll)
 
-    // document.body.style.overflow = 'hidden';
+      var slides = document.querySelector('.slides');               //슬라이드 구현
+      var slide = document.querySelectorAll('.slides li');
+      this.slideCount = slide.length
+      // let prevBtn = document.querySelector('.prev');
+      // let nextBtn = document.querySelector('.next');
+    }
+
+    document.body.style.overflow = 'hidden';
 
 
     this.numcount()
-    window.addEventListener('scroll', this.handleScroll)
-
-    var slides = this.$el.querySelector('.slides');               //슬라이드 구현
-    var slide = this.$el.querySelectorAll('.slides li');
-    var currentIdx = 0;
-    var slideCount = slide.length;
-    var slideWidth = 550;
-    var slideMargin = 18;
-    var prevBtn = this.$el.querySelector('.prev');
-    var nextBtn = this.$el.querySelector('.next');
 
     makeClone();
 
     function makeClone() {
-      for (var i = 0; i < slideCount; i++) {
+      for (var i = 0; i < this.slideCount; i++) {
         var cloneSlide = slide[i].cloneNode(true);
         cloneSlide.classList.add('clone');
         slides.appendChild(cloneSlide);
       }
-      for (var i = slideCount - 1; i >= 0; i--) {
+      for (var i = this.slideCount - 1; i >= 0; i--) {
         var cloneSlide = slide[i].cloneNode(true);
         cloneSlide.classList.add('clone');
         slides.prepend(cloneSlide);
@@ -244,45 +257,39 @@ export default {
     function updateWidth() {
       var currentSlides = slides.querySelectorAll('.slides li');
       var newSlideCount = currentSlides.length;
-      var newWidth = (slideWidth + slideMargin) * newSlideCount - slideMargin;
+      var newWidth = (this.slideWidth + this.slideMargin) * newSlideCount - this.slideMargin;
       slides.style.width = newWidth+'px';
  
     }   //
     function setInitialPos(){     // 슬라이드 중앙에 배치하기위에 앞쪽의 길이 계산
-      var initialTranslateValue = -(slideWidth+slideMargin)*slideCount+100;   //시작위치 결정
+      var initialTranslateValue = -(this.slideWidth+this.slideMargin)*this.slideCount+100;   //시작위치 결정
       slides.style.transform='translateX('+initialTranslateValue+'px)';
       console.log('translateX('+initialTranslateValue+'px)')
     }
 
-    nextBtn.addEventListener('click',function() {
-      moveSlide(currentIdx+1);
 
-    })
-    prevBtn.addEventListener('click',function() {
-      moveSlide(currentIdx-1);
-    })
     
-    function moveSlide(num){
-      slides.style.left = -num*(slideWidth+slideMargin)+'px';      //버튼 누를시 이동할 거리
-      currentIdx =num;
+    // function moveSlide(num){
+    //   slides.style.left = -num*(slideWidth+slideMargin)+'px';      //버튼 누를시 이동할 거리
+    //   currentIdx =num;
 
-      if(currentIdx ==slideCount || currentIdx == -slideCount){                      //일정 범위이후 재위치로 || 반대방향 추가
-        setTimeout(function(){
-          slides.classList.remove('animated');
-          slides.style.left = '0px';                   //재위치
-          currentIdx =0;
-        },500);
-        setTimeout(function(){
-          slides.classList.add('animated');
-        },600);
-      }
-    }
+    //   if(currentIdx ==slideCount || currentIdx == -slideCount){                      //일정 범위이후 재위치로 || 반대방향 추가
+    //     setTimeout(function(){
+    //       slides.classList.remove('animated');
+    //       slides.style.left = '0px';                   //재위치
+    //       currentIdx =0;
+    //     },500);
+    //     setTimeout(function(){
+    //       slides.classList.add('animated');
+    //     },600);
+    //   }
+    // }
     var timer =undefined;    // 자동 이동 
     
     function autoSlide() {
       if(timer ==undefined) {
         timer =setInterval(function(){   //반복호출
-          moveSlide(currentIdx +1);
+          moveSlide(this.currentIdx +1);
         }, 3000);
       }
     }
@@ -299,22 +306,19 @@ export default {
     // 2,3번 슬라이드
     var slides2 = this.$el.querySelector('.slides2');
     var slides3 = this.$el.querySelector('.slides3');
-    var slide2 = this.$el.querySelectorAll('.slides2 li');
-    var slide3 = this.$el.querySelectorAll('.slides3 li');
-    var slideCount2 =slide2.length;
-    var slideCount3 =slide3.length;
+
 
     makeClone2();
     makeClone3();
 
     function makeClone2(){
-      for (var j =0; j < slideCount; j++) {
+      for (var j =0; j <  this.slideCount; j++) {
         var cloneSlide2 = slide[j].cloneNode(true);
         cloneSlide2.classList.add('clone');
         slides2.appendChild(cloneSlide2);
       }}
     function makeClone3(){
-      for (var j =0; j < slideCount; j++) {
+      for (var j =0; j <  this.slideCount; j++) {
         var cloneSlide3 = slide[j].cloneNode(true);
         cloneSlide3.classList.add('clone');
         slides3.appendChild(cloneSlide3);
@@ -327,13 +331,13 @@ export default {
       function updateWidth2() {
         var currentSlides2 = slides2.querySelectorAll('.slides2 li');
         var newSlideCount2 = currentSlides2.length;
-        var newWidth2 = (slideWidth + slideMargin) * newSlideCount2 - slideMargin + 'px';
+        var newWidth2 = (this.slideWidth + this.slideMargin) * newSlideCount2 - this.slideMargin + 'px';
         slides2.style.width = newWidth2;
       }   
       function updateWidth3() {
         var currentSlides3 = slides3.querySelectorAll('.slides3 li');
         var newSlideCount3 = currentSlides3.length;
-        var newWidth3 = (slideWidth + slideMargin) * newSlideCount3 - slideMargin + 'px';
+        var newWidth3 = (this.slideWidth + this.slideMargin) * newSlideCount3 - this.slideMargin + 'px';
         slides3.style.width = newWidth3;
       }   //
 
@@ -364,7 +368,7 @@ export default {
   }, 
   computed: {
     top10_movies() {
-  
+      
       return this.$store.getters.top10_movies
     },
     recent30_movies() {
@@ -376,8 +380,9 @@ export default {
   },
 
   methods: {
-    // 영상 확대 축소
+    //영상 확대 축소
     handleWheelScroll(event) {
+      console.log(this.scale)
       const mainVideo = document.querySelector('.mainvideo');
       // 휠 스크롤 방향에 따라 축소 비율 조절
       if (event.deltaY > 0) {
@@ -389,7 +394,10 @@ export default {
         this.scale = Math.min(this.scale, this.maxScale);
       }
       // 비디오 컨테이너에 축소 비율 적용
-      this.$refs.videoContainer.style.transform = `scale(${this.scale})`;
+      if (this.scale<=1) {
+        document.querySelector('.mainvideo').style.transform = `scale(${this.scale})`;
+      
+      }
       if (this.scale <0.7) {
         document.body.style.overflow = '';
         // console.log(document.body.style)
@@ -400,7 +408,31 @@ export default {
       event.target.currentTime = 0;
       event.target.play();
     },
-    
+        
+    next() {
+      console.log('asdf')
+      this.moveSlide(this.currentIdx+1);
+    },
+    prev() {
+      this.moveSlide(this.currentIdx-1);
+    },
+
+    moveSlide(num) {
+      console.log(this.slideMargin)
+      this.slides.style.left = -num*(this.slideWidth+this.slideMargin)+'px';      //버튼 누를시 이동할 거리
+      this.currentIdx =num;
+
+      if(this.currentIdx == this.slideCount || this.currentIdx == -this.slideCount){                      //일정 범위이후 재위치로 || 반대방향 추가
+        setTimeout(function(){
+          slides.classList.remove('animated');
+          slides.style.left = '0px';                   //재위치
+          this.currentIdx =0;
+        },500);
+        setTimeout(function(){
+          slides.classList.add('animated');
+        },600);
+      }
+    },
     numcount() {
       $('.count-num').each(function() { 
       var $this = $(this),

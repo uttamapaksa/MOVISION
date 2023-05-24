@@ -2,7 +2,7 @@
   <div>
     <h1>Detail</h1>
 
-    <p>작성자 : {{ review.username }}</p>
+    <p @click.prevent="detailtoProfile(review.user)">작성자 : {{ review.username }}</p>
     <p>작성자번호 : {{ review.user }}</p>
     <p>글 번호 : {{ review.id }}</p>
     <p>제목 : {{ review.title }}</p>
@@ -16,11 +16,10 @@
     </div>
     <!-- 댓글 리스트 -->
     <div v-for="comment in comment_lst" :key=comment.id >
-      내용 : {{comment.content}} |
-      작성자: {{comment.username}} <br> 
-      작성자번호: {{comment.user}} | 
+      내용 : {{comment.content}}<br>
       댓글번호:{{comment.id}} |
-      작성시간 :{{comment.created_at.slice(0, 10)}}
+      <a @click.prevent="detailtoProfile(comment.user)">작성자: {{comment.username}}</a> | 
+      작성시간 : {{comment.created_at.slice(0, 10)}}
       <button v-if="comment.user == currentuser" @click="review_delete_comment(comment.id)">삭제</button>
     </div>
     <br><br>
@@ -116,6 +115,11 @@ export default {
         console.log('reivew_delete.catch')
       })
     },
+
+    detailtoProfile(profile_id) {
+      this.$store.dispatch('getProfile', profile_id)
+      this.$router.push({name: 'ProfileView', params: {profile_id: profile_id}})
+    }
     // review_update(review_id) { //글 수정 요청
     
     // },

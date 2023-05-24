@@ -15,12 +15,6 @@ def get_profile(request, user_id):
 
     if request.method == 'GET':
         user = get_object_or_404(User, pk=user_id)
-        like_movies = user.like_movies.all()
-        seen_movies = user.seen_movies.all()
-        followings = user.followings.all()
-        followers = user.followers.all()
-        reviews = user.reviews.all()
-        reviewcomments = user.reviewcomments.all()
         serializer = UserSerializer(user)
         return Response(serializer.data)
     
@@ -28,7 +22,6 @@ def get_profile(request, user_id):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
-            # serializer = UserdataSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -45,10 +38,13 @@ def follow(request, user_id):
         person.followers.add(user)
     return Response('follow_views.py')
 
-# def profile_image(request, user_id):
-#     if request.method == 'GET':
-#         userdata = get_object_or_404(Userdata, pk=user_id)
-#         serializer = MovieSerializer(Userdata, many=True)
-#         return Response(serializer.data)
+
+# 프로필 이미지 저장하기
+@api_view(['POST'])
+def profile_image(request, user_id):
     
-#     elif request.method == 'POST':
+    profile_pic = request.FILES.get('profile_pic')
+    user = get_object_or_404(User, pk=user_id)
+    user.profile_pic = profile_pic
+    user.save()
+    return Response('profile_image.views.py')

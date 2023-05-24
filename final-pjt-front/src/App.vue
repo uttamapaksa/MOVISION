@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <a @click.prevent="apptoProfile">{{currentusername}}</a> 님의 프로필
+      <a @click.prevent="apptoProfile">{{currentusername}}</a><span v-if="isLogin">님의 프로필</span>
     </nav>
     <router-view/>
   </div>
