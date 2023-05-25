@@ -24,16 +24,16 @@
           </div>
         </div>
         <div class="img_text col-6">
-          <div class="fads" data-aos="fade" data-aos-duration="1000" data-aos-delay="1500">
+          <div class="fads" data-aos="fade" data-aos-duration="2000" data-aos-delay="1000">
             <span class="count-num" data-count="7251">0</span> 개의 영화<br>
           </div>
-          <div class="fads" data-aos="fade" data-aos-duration="1000" data-aos-delay="1800">
+          <div class="fads" data-aos="fade" data-aos-duration="2300" data-aos-delay="1300">
             <span class="count-num" data-count="130">0</span> 개의 OTT 공유그룹
           </div>
-          <div class="fads" data-aos="fade" data-aos-duration="1000" data-aos-delay="2200">
+          <div class="fads" data-aos="fade" data-aos-duration="1000" data-aos-delay="1800">
             <span class="count-num" data-count="125" >0</span> 개의 리뷰<br>
           </div>
-          <div class="fads" data-aos="fade" data-aos-duration="1000" data-aos-delay="2500">
+          <div class="fads" data-aos="fade" data-aos-duration="1000" data-aos-delay="2000">
             회원수 : <span class="count-num" data-count="42">0</span> 명
           </div>
         </div>
@@ -71,7 +71,7 @@
 
     <main ><br><br><br><br><br><br>
       <!-- 영화 포스터 슬라이드-->
-      <h3 style="color: black; font-family: 'Helvetica Neue', Arial, sans-serif;">박스 오피스</h3><br>
+      <h3 class="office">월간 박스 오피스</h3><br>
       <div class="slide_wrapper">
         <!-- 왼쪽버튼 -->
         <div class="prev" @click='prev' style="position: absolute; top: 50%; left: 5%; transform: translate(-50%, -50%); z-index: 1;">
@@ -179,6 +179,8 @@ export default {
       newSlideCount: 0,    // 슬라이드1 갯수
       currentIdx :0,  //현재 슬라이드1의 위치
       upimg : false,
+
+
     }
   },
   mounted() {
@@ -187,19 +189,18 @@ export default {
       this.$store.dispatch('fetchMovies');
     } else {
       this.$store.dispatch('fetchMovies');
-      console.log(this.$store.getters.movies)
     }
 
     //휠스크롤 영상 축소
     
     this.numcount()
     window.addEventListener('scroll', this.handleScroll)
-
+  
     var slides = this.$el.querySelector('.slides');               //슬라이드 구현
     var slide = this.$el.querySelectorAll('.slides li');
     var currentIdx = 0;
     var slideCount = slide.length;
-    var slideWidth = 550;
+    var slideWidth = 900;
     var slideMargin = 18;
     var prevBtn = this.$el.querySelector('.prev');
     var nextBtn = this.$el.querySelector('.next');
@@ -233,7 +234,7 @@ export default {
  
     }   //
     function setInitialPos(){     // 슬라이드 중앙에 배치하기위에 앞쪽의 길이 계산
-      var initialTranslateValue = -(slideWidth+slideMargin)*slideCount+100;   //시작위치 결정
+      var initialTranslateValue = -(slideWidth+slideMargin)*slideCount+280;   //시작위치 결정
       slides.style.transform='translateX('+initialTranslateValue+'px)';
       console.log('translateX('+initialTranslateValue+'px)')
     }
@@ -328,42 +329,44 @@ export default {
       slides3.style.width = newWidth3;
     }   //
 
-  slides2.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
-    slowSlide2();
-  });
-  slides2.addEventListener('mouseleave',function(){
-    autoSlide2();
-  }) //
-  function slowSlide2() {
-    slides2.style.animation = 'slide-animation2 52s linear infinite'
-  }
-  function autoSlide2() {
-    slides2.style.animation = 'slide-animation2 27s linear infinite'
-  }
-  slides3.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
-    slowSlide3();
-  });
-  slides3.addEventListener('mouseleave',function(){
-    autoSlide3();
-  }) //
-  function slowSlide3() {
-    slides3.style.animation = 'slide-animation3 50s linear infinite'
-  }
-  function autoSlide3() {
-    slides3.style.animation = 'slide-animation3 25s linear infinite'
-  }
+  // slides2.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
+  //   slowSlide2();
+  // });
+  // slides2.addEventListener('mouseleave',function(){
+  //   autoSlide2();
+  // }) //
+  // function slowSlide2() {
+  //   slides2.style.animation = 'slide-animation2 60s linear infinite'
+  // }
+  // function autoSlide2() {
+  //   slides2.style.animation = 'slide-animation2 50s linear infinite'
+  // }
+  // slides3.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
+  //   slowSlide3();
+  // });
+  // slides3.addEventListener('mouseleave',function(){
+  //   autoSlide3();
+  // }) //
+  // function slowSlide3() {
+  //   slides3.style.animation = 'slide-animation3 50s linear infinite'
+  // }
+  // function autoSlide3() {
+  //   slides3.style.animation = 'slide-animation3 25s linear infinite'
+  // }
 
 
 
   }, 
   computed: {
     top10_movies() {
-      return this.$store.getters.top10_movies
+      return this.$store.getters.top10_movies.reverse()
     },
     recent30_movies() {
       return this.$store.getters.recent30_movies
     },
     new10_movies() {
+      console.log('확인')
+  
       return this.$store.getters.new10_movies
     },
     currentuser() {
@@ -374,6 +377,7 @@ export default {
   methods: {
     // 영상 확대 축소
     handleWheelScroll(event) {
+
       // const mainVideo = document.querySelector('.mainvideo');
   
         // 휠 스크롤 방향에 따라 축소 비율 조절
@@ -458,12 +462,6 @@ export default {
 
     //검색기능
     gosearchmovie() {
-      console.log(this.slideCount)
-      console.log(this.slideWidth1)
-      console.log(this.slideMargin1)
-      console.log(this.newWidth)
-      console.log(this.newSlideCount)
-      console.log(this.currentIdx)
       this.$router.push({ name: 'SearchView'})
     }
   },
@@ -521,7 +519,7 @@ header {
   /* justify-content: center; */
   /* align-items: center; */
   width: 2000px;
-  height: 700px;
+  height: 600px;
   /* background: rebeccapurple; */
   overflow: hidden;
   margin-top:20vh;
@@ -538,14 +536,15 @@ header {
   background-color: #3f3d40;
 }
 .img_text {
-  /* display: ; */
   margin: auto;
 }
 .fads {
-  color: #130a0a;
+  color: #cdb5b5;
+  text-decoration: underline;
+  
 }
 .count-num {
-  color: #762626;
+  color: #979720;
   font-size: 50px;
 }
 .logocol {
@@ -591,6 +590,7 @@ header {
 /* 검색2 */
 .input_box {
   margin-top: 20px;
+  margin-bottom: 50px;
   display: flex;
   justify-content: center;
 }
@@ -666,6 +666,7 @@ header {
 
 main {
   width: 1500px;
+  margin-top: 100px;
 }
 
 .mainbox {
@@ -714,11 +715,12 @@ main {
   text-align: center;
 }
 .endbox {
-  background-color: #ffb10a;
+  background-color: #201c12;
   width: 100vw;
-  height: 200px;
+  height: 50px;
 }
 .text3 {
+  font-size: 35px;
   color: rgb(225, 222, 222);
 }
 .custom-1cqzdpo {
@@ -773,7 +775,7 @@ main {
   position: relative;
   /* width: 95%; */
   margin: 0 auto;
-  height: 420px;
+  height: 550px;
   overflow: hidden;
 }
 .slides{
@@ -786,7 +788,7 @@ main {
 }
 .slides li{
   width: 900px;
-  height: 420px;
+  height: 500px;
   background: #ccc;
   float: left;
   border-radius: 15px;
@@ -813,7 +815,13 @@ main {
   position: relative;
   opacity: 1;
 }
-
+.office {
+  font-size : 50px;
+  margin-bottom: 30px;
+  color: #a3a7aa;
+  shape-outside: -moz-element();
+  text-decoration: underline;
+}
 
 .snip1:hover img,
 .snip1.hover img {

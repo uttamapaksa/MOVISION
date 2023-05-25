@@ -33,7 +33,7 @@ export default {
     GET_TOP10_MOVIES(state, movies) {
       const top10_movies = movies.sort(function (a,b) {
         return b.vote_average - a.vote_average
-      }).slice(0,10)
+      }).slice(1,11)
       return state.top10_movies = top10_movies
     },
     GET_RECENT30_MOVIES(state, movies) {
@@ -43,6 +43,7 @@ export default {
       return state.recent30_movies = recent30_movies
     },
     GET_NEW10_MOVIES(state, movies) {
+      console.log(movies)
       const new10_movies = movies.sort(function (a,b) {
         return new Date(b.release_date) - new Date(a.release_date)
         // return 0.5 - Math.random()
