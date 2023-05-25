@@ -3,7 +3,7 @@
     <nav>
       <router-link to="/">Mainpage</router-link> |
       <router-link :to="{ name: 'SearchView' }">search</router-link> | 
-      <router-link :to="{ name: 'RecommendView' }">reco</router-link> |
+      <router-link :to="{ name: 'RecommendView' , params: {user_id: currentuser}}">recommend</router-link> |
       <router-link :to="{ name: 'CommunityView' }">commu</router-link> |
 
        <!-- 로그인 버튼-->

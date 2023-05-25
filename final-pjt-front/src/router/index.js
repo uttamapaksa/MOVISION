@@ -26,7 +26,7 @@ const routes = [
     component: SearchView
   },
   {
-    path: '/recommend',
+    path: '/recommend/:user_id',
     name: 'RecommendView',
     component: RecommendView
   },
@@ -56,6 +56,11 @@ const routes = [
     component: ReviewCreateView
   },
   {
+    path: '/review/:review_id',
+    name: 'ReviewDetialView',
+    component: ReviewDetialView
+  },
+  {
     path: '/party_create',
     name: 'PartyCreateView',
     component: PartyCreateView
@@ -64,11 +69,6 @@ const routes = [
     path: '/party/:party_id',
     name: 'PartyDetialView',
     component: PartyDetialView
-  },
-  {
-    path: '/review/:review_id',
-    name: 'ReviewDetialView',
-    component: ReviewDetialView
   },
 
 ]

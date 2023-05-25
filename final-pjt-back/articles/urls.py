@@ -15,6 +15,8 @@ urlpatterns = [
     #파티게시판
     path('parties/', views.party_list),
     path('parties/<int:party_pk>/', views.party_detail),
+    path('parties/<int:party_pk>/create/', views.party_comment_create),  # 모집게시판 댓글 생성
+    path('parties/<int:party_pk>/join/', views.party_join),  # 모집게시판 참가
     path('party_comments/', views.party_comment_list),
     path('party_comments/<int:party_comment_pk>/', views.party_comment_detail),
     path('parties/<int:party_pk>/comments/', views.party_comment_create),

@@ -3,7 +3,7 @@ const API_URL = 'http://127.0.0.1:8000'
 
 export default {
   state: {
-    totalgenres: { 12:'모험', 14:'판타지', 16:'애니메이션', 18:'드라마', 27:'공포', 28:'액션', 35: '코미디', 36: '역사',37: '서부', 53: '스릴러', 80: '범죄',99: '다큐멘터리',878: 'SF',9648: '미스터리',10402: '음악',10749: '로맨스',10751: '가족', 10752: '전쟁',10770: 'TV영화',},
+    totalgenres: {12:'모험', 14:'판타지', 16:'애니메이션', 18:'드라마', 27:'공포', 28:'액션', 35: '코미디', 36: '역사',37: '서부', 53: '스릴러', 80: '범죄',99: '다큐멘터리',878: 'SF',9648: '미스터리',10402: '음악',10749: '로맨스',10751: '가족', 10752: '전쟁',10770: 'TV영화',},
     movies: [],
     movie: null,
     movie_comments: [],
@@ -12,6 +12,7 @@ export default {
     top10_movies: [],
     recent30_movies: [],
     new10_movies: [],
+    recommend_moives: [],
   },
   
   getters: {
@@ -24,7 +25,7 @@ export default {
     top10_movies: (state) => state.top10_movies,
     recent30_movies: (state) => state.recent30_movies,
     new10_movies: (state) => state.new10_movies,
-    
+    recommend_moives: (state) => state.recommend_moives,
   },
 
   mutations: {
@@ -50,7 +51,8 @@ export default {
     },
     GET_MOVIE_DETAIL: (state, movie) => state.movie = movie,
     GET_MOVIE_COMMENTS: (state, movie_comments) => state.movie_comments = movie_comments,
-    GET_MOVIE_LIKES: (state, movie_likes) => state.movie_likes = movie_likes
+    GET_MOVIE_LIKES: (state, movie_likes) => state.movie_likes = movie_likes,
+    GET_RECOMMEND_MOVIES: (state, recommend_moives) => state.recommend_moives = recommend_moives,
   },
 
   actions: {
@@ -137,5 +139,21 @@ export default {
           console.log('seenmovie.catch')
         })
     },
+    getRecommendMovies(context, user_id) {
+      console.log('recommendmovie.axios')
+      axios({
+        method: 'get',
+        url: `${API_URL}/api/v1/${user_id}/recommendation/`,
+      })
+      .then(res => {
+        console.log(res)
+        console.log('recommendmovie.then')
+        context.commit('GET_RECOMMEND_MOVIES', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+        console.log('recommendmovie.catch')
+      })
+    }
   }
 }

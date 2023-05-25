@@ -20,7 +20,7 @@
       댓글번호:{{comment.id}} |
       <a @click.prevent="detailtoProfile(comment.user)">작성자: {{comment.username}}</a> | 
       작성시간 : {{comment.created_at.slice(0, 10)}}
-      <button v-if="comment.user == currentuser" @click="review_delete_comment(comment.id)">삭제</button>
+      <button v-if="comment.user == currentuser" @click="review_delete_comment(comment.id)">댓글삭제</button>
     </div>
     <br><br>
     <!-- 글 삭제,수정 -->
@@ -50,11 +50,11 @@ export default {
   },
   
   computed: {   //변수로 사용할 함수
-    comment_lst() {   
-      return this.$store.state.review_comments.filter(comment=> (comment.review == this.$route.params.review_id))
-    },
     review() {
       return this.$store.state.review_articles.filter(review=> (review.id ==this.$route.params.review_id))[0]
+    },
+    comment_lst() {   
+      return this.$store.state.review_comments.filter(comment=> (comment.review == this.$route.params.review_id))
     },
     currentuser() {
       return this.$store.getters.currentuser

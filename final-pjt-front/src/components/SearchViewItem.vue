@@ -3,10 +3,8 @@
   <img :src="`https://image.tmdb.org/t/p/original${movie.poster_path}`" class="card-img-search" alt="...">
   <div class="card-body">
     <div class="card-text">
-      제목 : {{ movie.title}}<hr>
+      {{ movie.title}} ({{ movie.release_date.slice(0,4)}})<hr>
       평점 : {{ movie.vote_average}}<hr>
-      인기 : {{ movie.popularity}}<hr>
-      개봉일 : {{ movie.release_date}}<hr>
       {{ genres }}<br>
       <!-- test2 : {{ test2 }} -->
     </div>
@@ -23,7 +21,7 @@ export default {
   },
   computed: {
     genres() {
-      return Object.values(this.movie.genres).map(id => this.totalgenres[id])
+      return this.movie.genres.map(genre => this.totalgenres[genre.id])
     },
   },
   methods: {
@@ -34,5 +32,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.card-img-search {
+  
+}
 </style>

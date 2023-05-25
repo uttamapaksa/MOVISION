@@ -3,57 +3,85 @@
     <nav style="display: none;"></nav>
     
     <header>
-      <div >
-        <section  class="content-section" data-scroll>
-          <figure class="figure">
-            <video @wheel="handleWheelScroll" class="mainvideo" muted autoplay @ended="replay">
-              <source src="@/movieplay/movie.mp4" type="video/mp4">
-            </video>
-          </figure>
-        </section>
+      <!-- 영상 -->
+      <section  class="content-section" data-scroll>
+        <video  @wheel="handleWheelScroll" class="mainvideo" :style="{ opacity: videoOpacity, transform: 'scale(' + scale + ')' }" muted autoplay @ended="replay">
+          <source src="@/movieplay/movie.mp4" type="video/mp4">
+        </video>
+      </section>
+      
+      <!-- 이미지 -->
+      <div class="tvtable" data-aos="fade-up" data-aos-duration="1500">
+        <img class="tvtableimg" :src="`${SERVER_URL}/media/table.png`" alt="">
       </div>
-      <div class="maintext" data-aos="fade-up" data-aos-duration="1000">
-        <div class="maintext-text">
+      <!-- 텍스트 -->
+      <div class="maintext row" data-aos="fade-up" data-aos-duration="1000">
+        <div class="maintext-text col-6">
           <div class="logocol" data-aos="fade" data-aos-duration="1000" data-aos-delay="200">
             <img style="height: 70%" src="../assets/logo.png" alt="logo.png">
           </div>
-          <div class="numcol" data-count="48251" data-aos="fade-up" data-aos-duration="1000">
-            <div style="height: 80%;">
-              <div data-aos="fade" data-aos-duration="1000" data-aos-delay="500">
-                <span class="count-num" data-count="48251">0</span> 개의 영화<br>
-              </div>
-              <div data-aos="fade" data-aos-duration="1000" data-aos-delay="1000">
-                <span class="count-num" data-count="125439" >0</span> 개의 리뷰<br>
-              </div>
-              <div data-aos="fade" data-aos-duration="1000" data-aos-delay="1500">
-                회원수 : <span class="count-num" data-count="304">0</span> 명
-              </div>
-            </div>
+        </div>
+        <div class="col-6">
+          <div data-aos="fade" data-aos-duration="1000" data-aos-delay="500">
+            <span class="count-num" data-count="5251">0</span> 개의 영화<br>
+          </div>
+          <div data-aos="fade" data-aos-duration="1000" data-aos-delay="1000">
+            <span class="count-num" data-count="125" >0</span> 개의 리뷰<br>
+          </div>
+          <div data-aos="fade" data-aos-duration="1000" data-aos-delay="1500">
+            회원수 : <span class="count-num" data-count="3">0</span> 명
+          </div>
+        </div>
+      </div>
+      <!-- 텍스트 검색 -->
+      <div >
+        <div class='text-search'>
+          <div>
+            <p data-count="48251" data-aos="fade-up" data-aos-duration="1000">
+              영화 이름이 기억나지 않을때, 
+            </p><br>
+            <p data-count="48251" data-aos="fade-up" data-aos-duration="1000">
+              볼 영화가 없을때,
+            </p><br>
+          </div>
+          <div>
+            <p data-count="48251" data-aos="fade-up" data-aos-duration="1000">
+              좋아하는 장르와 영화를 기반으로 영화를 추천받고 싶다면,
+              </p>
           </div>
         </div>
       </div>
     </header>
-    
-    
-    <main >
+    <div class="input_box" data-aos="fade-up" data-aos-duration="1000">
+      <div class="container-4">
+        <input type="search" id="search" placeholder="Search..." />
+        <button @click="gosearchmovie" class="icon"><i class="fa fa-search">검색</i></button>
+      </div>
+    </div>
+    <!-- 검색버튼 -->
+    <!-- <div class="button">
+      <div class="compass"></div>
+      <div class="msg">Over here !</div>
+    </div> -->
 
-      <br><br><br>
-      <br><br><br>
-    ` <!-- 영화 포스터 -->
-      <!-- <h3 style="color: white; font-family: 'Helvetica Neue', Arial, sans-serif;">인기 영화</h3><br> -->
+    <main ><br><br><br><br><br><br>
+      <!-- 영화 포스터 슬라이드-->
+      <h3 style="color: black; font-family: 'Helvetica Neue', Arial, sans-serif;">박스 오피스</h3><br>
       <div class="slide_wrapper">
+        <!-- 왼쪽버튼 -->
         <div class="prev" @click='prev' style="position: absolute; top: 50%; left: 5%; transform: translate(-50%, -50%); z-index: 1;">
           <!-- <button>prev</button> -->
           <svg style="position: absolut; top: 50%; left: 5%; transform: translate(-50%, -50%); z-index: 1;  fill: white;" xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="prev bi bi-chevron-compact-left" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223z"/>
           </svg>
-    
         </div>
+        <!-- 오른쪽버튼 -->
         <div class="next" @click='next' style="position: absolute; top: 50%; left: 95%; transform: translate(-50%, -50%); z-index: 1;">
           <svg style="position: absolute; top: 50%; left: 95%; transform: translate(-50%, -50%); z-index: 1;  fill: white;" xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="next bi bi-chevron-compact-right" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671z"/>
           </svg>
         </div>
+        <!-- 슬라이드 -->
         <ul class="slides">
           <li class="snip1" v-for="(populor_movie,idx) in top10_movies" :key="idx">
               <div style="position: relative;">
@@ -85,6 +113,7 @@
             <div style="position: relative;">
               <button @click="gomovie(new10_movie.id)" style="position: absolute; top: 65%; left: 50%; transform: translate(-50%, -50%); ">영화 정보보기</button>
               <p style="position:absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5vh;">{{new10_movie.title}}</p>
+              <!-- {{new10_movie.backdrop_path}} -->
               <img :src="`https://image.tmdb.org/t/p/original${new10_movie.backdrop_path}`" class="card-img-top" alt="..." style="border-radius: 10px; object-fit: cover; width: 100%; height: 100%;">
             </div>
           </li>
@@ -93,7 +122,7 @@
 
       <div class="mainbox"  data-aos="fade-up" data-aos-duration="1000">
         <br><br><br><br><br><br>
-     
+
       </div>
       
       <div class="searchbox" data-aos="fade-up" data-aos-duration="1000">
@@ -104,7 +133,7 @@
         </router-link>
       </div>
 
-
+<!-- 
       <div class="mainbox search" data-aos="fade-up" data-aos-duration="1000">
         <div class="custom-1wp6uk4">
           <h3 class="custom-1histt2">
@@ -114,51 +143,8 @@
           </div>
         </div>
         <img class="mainimg" src="@/assets/mainsearch.jpg" alt="mainsearch">
-      </div>
+      </div> -->
       
-      <div class="mainbox popular" data-aos="fade-up"
-     data-aos-duration="1000">
-        <div class="custom-1wp6uk4">
-          <h3 class="custom-1histt2">
-            <span>현재 가장 HOT한 영화 인기 순위<br></span>
-          </h3>
-          <div class="custom-1yltisf">
-            <!-- <router-link :to="{name: 'popular'}" class="custom-1cqzdpo">인기순위 보기</router-link> -->
-          </div>
-        </div>
-        <img class="mainimg" src="@/assets/mainpopular.jpg" alt="mainpopular">
-      </div>
-      
-      <div class="mainbox recommend" data-aos="fade-up"
-     data-aos-duration="1000">
-        <div class="custom-1wp6uk4">
-          <h3 class="custom-1histt2">
-            <span>내 맘대로 고르는 맞춤 영화 추천<br></span>
-          </h3>
-          <div class="custom-1yltisf">
-            <router-link :to="{name: 'RecommendView'}" class="custom-1cqzdpo">영화 추천받기</router-link>
-          </div>
-        </div>
-        <img class="mainimg" src="@/assets/mainrecommend.jpg" alt="mainrecommend">
-      </div>
-      
-      <div class="mainbox user-recommend" data-aos="fade-up"
-     data-aos-duration="1000">
-        <div class="custom-1wp6uk4">
-          <h3 class="custom-1histt2">
-            <span>user님 이런 영화 어떠세요?<br></span>
-          </h3>
-          <div class="custom-1yltisf">
-            <a href="#" class="custom-1cqzdpo">#</a>
-          </div>
-        </div>
-      </div>
-  
-      <div class="mainbox" data-aos="fade-up"
-     data-aos-duration="1000">
-        <h3>유저 기반 추천리스트 모음</h3>
-      </div>
-  
     </main>
 
     <footer>
@@ -172,6 +158,7 @@
 <script src="https://unpkg.com/scroll-out/dist/scroll-out.min.js"></script>
 <script>
 AOS.init();
+
 // import VueSimpleScrollbar from 'vue-simple-scrollbar'
 // import common from '@/assets/js/common.js'
 import $ from 'jquery'
@@ -183,65 +170,55 @@ export default {
   name: 'MainView',
   data() {
     return {
+      SERVER_URL: 'http://localhost:8000',
       maintextvis: 0,
       scale: 1, // 초기 축소 비율
       scaleFactor: 0.05, // 스크롤 한 번당 축소 비율
       minScale: 0.5, // 최소 축소 비율
       maxScale: 1, // 최대 축소 비율
-      pass_scrolling :1,
-      currentIdx : 0,
-      slideCount: 0,
-      slideWidth: 550,
-      slideMargin: 18,
+      videoOpacity: 1,  //영상 투명도
+      // pass_scrolling :1,
+      // currentIdx : 0,
+      slideCount: 0, // 초기 슬라이드1의 갯수
+      slideWidth1: 900,   //슬라이드1의 개당 길이
+      slideMargin1: 18,   //슬라이드 1의 개당 마진
+      newWidth: 1500,   // 슬라이드1의 전체 길이
+      newSlideCount: 0,    // 슬라이드1 갯수
+      currentIdx :0,  //현재 슬라이드1의 위치
     }
-  },
-  beforeRouteLeave(to, from, next) {
-        // this.maintextvis =  0,
-    console.log('이동')
-    this.scale = 1 // 초기 축소 비율
-    const mainVideo = document.querySelector('.mainvideo')
-    mainVideo.style.opacity = 1;
-    document.querySelector('.mainvideo').style.transform = `scale(${this.scale})`;
-    document.body.style.overflow = '';
-    this.pass_scrolling =0
-    next()
   },
   mounted() {
-    if (!this.$store.getters.movies.length) {
+    console.log(this.$store.state.movies)
+    if (!this.$store.state.movies) {
       this.$store.dispatch('fetchMovies');
-      // console.log(this.$store.getters.movies)
     } else {
       this.$store.dispatch('fetchMovies');
-      // console.log(this.$store.getters.movies)
+      console.log(this.$store.state.movies)
     }
-    console.log(this.$store.getters.top10_movies)
 
     //휠스크롤 영상 축소
-    if (this.pass_scrolling) {
-      window.addEventListener('wheel', this.handleWheelScroll);
-      window.addEventListener('scroll', this.handleScroll)
-
-      var slides = document.querySelector('.slides');               //슬라이드 구현
-      var slide = document.querySelectorAll('.slides li');
-      this.slideCount = slide.length
-      // let prevBtn = document.querySelector('.prev');
-      // let nextBtn = document.querySelector('.next');
-    }
-
-    document.body.style.overflow = 'hidden';
-
-
+    
     this.numcount()
+    window.addEventListener('scroll', this.handleScroll)
+
+    var slides = this.$el.querySelector('.slides');               //슬라이드 구현
+    var slide = this.$el.querySelectorAll('.slides li');
+    var currentIdx = 0;
+    var slideCount = slide.length;
+    var slideWidth = 550;
+    var slideMargin = 18;
+    var prevBtn = this.$el.querySelector('.prev');
+    var nextBtn = this.$el.querySelector('.next');
 
     makeClone();
 
     function makeClone() {
-      for (var i = 0; i < this.slideCount; i++) {
+      for (var i = 0; i < slideCount; i++) {
         var cloneSlide = slide[i].cloneNode(true);
         cloneSlide.classList.add('clone');
         slides.appendChild(cloneSlide);
       }
-      for (var i = this.slideCount - 1; i >= 0; i--) {
+      for (var i = slideCount - 1; i >= 0; i--) {
         var cloneSlide = slide[i].cloneNode(true);
         cloneSlide.classList.add('clone');
         slides.prepend(cloneSlide);
@@ -257,151 +234,171 @@ export default {
     function updateWidth() {
       var currentSlides = slides.querySelectorAll('.slides li');
       var newSlideCount = currentSlides.length;
-      var newWidth = (this.slideWidth + this.slideMargin) * newSlideCount - this.slideMargin;
+      var newWidth = (slideWidth + slideMargin) * newSlideCount - slideMargin;
       slides.style.width = newWidth+'px';
  
     }   //
     function setInitialPos(){     // 슬라이드 중앙에 배치하기위에 앞쪽의 길이 계산
-      var initialTranslateValue = -(this.slideWidth+this.slideMargin)*this.slideCount+100;   //시작위치 결정
+      var initialTranslateValue = -(slideWidth+slideMargin)*slideCount+100;   //시작위치 결정
       slides.style.transform='translateX('+initialTranslateValue+'px)';
       console.log('translateX('+initialTranslateValue+'px)')
     }
 
+    nextBtn.addEventListener('click',function() {
+      moveSlide(currentIdx+1);
 
+    })
+    prevBtn.addEventListener('click',function() {
+      moveSlide(currentIdx-1);
+    })
     
-    // function moveSlide(num){
-    //   slides.style.left = -num*(slideWidth+slideMargin)+'px';      //버튼 누를시 이동할 거리
-    //   currentIdx =num;
+    function moveSlide(num){
+      slides.style.left = -num*(slideWidth+slideMargin)+'px';      //버튼 누를시 이동할 거리
+      currentIdx =num;
 
-    //   if(currentIdx ==slideCount || currentIdx == -slideCount){                      //일정 범위이후 재위치로 || 반대방향 추가
-    //     setTimeout(function(){
-    //       slides.classList.remove('animated');
-    //       slides.style.left = '0px';                   //재위치
-    //       currentIdx =0;
-    //     },500);
-    //     setTimeout(function(){
-    //       slides.classList.add('animated');
-    //     },600);
-    //   }
-    // }
-    var timer =undefined;    // 자동 이동 
-    
-    function autoSlide() {
-      if(timer ==undefined) {
-        timer =setInterval(function(){   //반복호출
-          moveSlide(this.currentIdx +1);
-        }, 3000);
+      if(currentIdx ==slideCount || currentIdx == -slideCount){                      //일정 범위이후 재위치로 || 반대방향 추가
+        setTimeout(function(){
+          slides.classList.remove('animated');
+          slides.style.left = '0px';                   //재위치
+          currentIdx =0;
+        },500);
+        setTimeout(function(){
+          slides.classList.add('animated');
+        },600);
       }
     }
+  var timer =undefined;    // 자동 이동 
+  
+  function autoSlide() {
+    if(timer ==undefined) {
+      timer =setInterval(function(){   //반복호출
+        moveSlide(currentIdx +1);
+      }, 3000);
+    }
+  }
+  function autoSlide() {
+    if(timer ==undefined) {
+      timer =setInterval(function(){   //반복호출
+        moveSlide(currentIdx +1);
+      }, 3000);
+    }
+  }
+  autoSlide();
+  function stopSlide() {
+    clearInterval(timer);
+  }
+  slides.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
+    stopSlide();
+  });
+  slides.addEventListener('mouseleave',function(){
     autoSlide();
-    function stopSlide() {
-      clearInterval(timer);
-    }
-    slides.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
-      stopSlide();
-    });
-    slides.addEventListener('mouseleave',function(){
-      autoSlide();
-    }) //
-    // 2,3번 슬라이드
-    var slides2 = this.$el.querySelector('.slides2');
-    var slides3 = this.$el.querySelector('.slides3');
+  }) //
+  // 2,3번 슬라이드
+  var slides2 = this.$el.querySelector('.slides2');
+  var slides3 = this.$el.querySelector('.slides3');
+  var slide2 = this.$el.querySelectorAll('.slides2 li');
+  var slide3 = this.$el.querySelectorAll('.slides3 li');
+  var slideCount2 =slide2.length;
+  var slideCount3 =slide3.length;
+
+  makeClone2();
+  makeClone3();
+
+  function makeClone2(){
+    for (var j =0; j < slideCount; j++) {
+      var cloneSlide2 = slide[j].cloneNode(true);
+      cloneSlide2.classList.add('clone');
+      slides2.appendChild(cloneSlide2);
+    }}
+  function makeClone3(){
+    for (var j =0; j < slideCount; j++) {
+      var cloneSlide3 = slide[j].cloneNode(true);
+      cloneSlide3.classList.add('clone');
+      slides3.appendChild(cloneSlide3);
+    }}
+  updateWidth2();
+  // setInitialPos2(); 
+  updateWidth3();
+  // setInitialPos3(); 
+
+    function updateWidth2() {
+      var currentSlides2 = slides2.querySelectorAll('.slides2 li');
+      var newSlideCount2 = currentSlides2.length;
+      var newWidth2 = (slideWidth + slideMargin) * newSlideCount2 - slideMargin + 'px';
+      slides2.style.width = newWidth2;
+    }   
+    function updateWidth3() {
+      var currentSlides3 = slides3.querySelectorAll('.slides3 li');
+      var newSlideCount3 = currentSlides3.length;
+      var newWidth3 = (slideWidth + slideMargin) * newSlideCount3 - slideMargin + 'px';
+      slides3.style.width = newWidth3;
+    }   //
+
+  slides2.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
+    slowSlide2();
+  });
+  slides2.addEventListener('mouseleave',function(){
+    autoSlide2();
+  }) //
+  function slowSlide2() {
+    slides2.style.animation = 'slide-animation2 52s linear infinite'
+  }
+  function autoSlide2() {
+    slides2.style.animation = 'slide-animation2 27s linear infinite'
+  }
+  slides3.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
+    slowSlide3();
+  });
+  slides3.addEventListener('mouseleave',function(){
+    autoSlide3();
+  }) //
+  function slowSlide3() {
+    slides3.style.animation = 'slide-animation3 50s linear infinite'
+  }
+  function autoSlide3() {
+    slides3.style.animation = 'slide-animation3 25s linear infinite'
+  }
 
 
-    makeClone2();
-    makeClone3();
 
-    function makeClone2(){
-      for (var j =0; j <  this.slideCount; j++) {
-        var cloneSlide2 = slide[j].cloneNode(true);
-        cloneSlide2.classList.add('clone');
-        slides2.appendChild(cloneSlide2);
-      }}
-    function makeClone3(){
-      for (var j =0; j <  this.slideCount; j++) {
-        var cloneSlide3 = slide[j].cloneNode(true);
-        cloneSlide3.classList.add('clone');
-        slides3.appendChild(cloneSlide3);
-      }}
-    updateWidth2();
-    // setInitialPos2(); 
-    updateWidth3();
-    // setInitialPos3(); 
-
-      function updateWidth2() {
-        var currentSlides2 = slides2.querySelectorAll('.slides2 li');
-        var newSlideCount2 = currentSlides2.length;
-        var newWidth2 = (this.slideWidth + this.slideMargin) * newSlideCount2 - this.slideMargin + 'px';
-        slides2.style.width = newWidth2;
-      }   
-      function updateWidth3() {
-        var currentSlides3 = slides3.querySelectorAll('.slides3 li');
-        var newSlideCount3 = currentSlides3.length;
-        var newWidth3 = (this.slideWidth + this.slideMargin) * newSlideCount3 - this.slideMargin + 'px';
-        slides3.style.width = newWidth3;
-      }   //
-
-    slides2.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
-      slowSlide2();
-    });
-    slides2.addEventListener('mouseleave',function(){
-      autoSlide2();
-    }) //
-    function slowSlide2() {
-      slides2.style.animation = 'slide-animation2 52s linear infinite'
-    }
-    function autoSlide2() {
-      slides2.style.animation = 'slide-animation2 27s linear infinite'
-    }
-    slides3.addEventListener('mouseenter',function(){    // 마우스 갖다 대면 이벤트 정지
-      slowSlide3();
-    });
-    slides3.addEventListener('mouseleave',function(){
-      autoSlide3();
-    }) //
-    function slowSlide3() {
-      slides3.style.animation = 'slide-animation3 50s linear infinite'
-    }
-    function autoSlide3() {
-      slides3.style.animation = 'slide-animation3 25s linear infinite'
-    }
   }, 
   computed: {
     top10_movies() {
-      
-      return this.$store.getters.top10_movies
+      return this.$store.state.top10_movies
     },
     recent30_movies() {
-      return this.$store.getters.recent30_movies
+      return this.$store.state.recent30_movies
     },
     new10_movies() {
-      return this.$store.getters.new10_movies
+      return this.$store.state.new10_movies
     },
+    currentuser() {
+      return this.$store.getters.currentuser
+    }
   },
 
   methods: {
-    //영상 확대 축소
+    // 영상 확대 축소
     handleWheelScroll(event) {
-      console.log(this.scale)
-      const mainVideo = document.querySelector('.mainvideo');
-      // 휠 스크롤 방향에 따라 축소 비율 조절
-      if (event.deltaY > 0) {
-        this.scale -= 0.1; // 비디오 크기조절
-        mainVideo.style.opacity = 0.6;   //비디오 투명도 조절
-        this.scale = Math.max(this.scale, this.minScale);
-      } else {
-        this.scale += this.scaleFactor;
-        this.scale = Math.min(this.scale, this.maxScale);
-      }
-      // 비디오 컨테이너에 축소 비율 적용
-      if (this.scale<=1) {
-        document.querySelector('.mainvideo').style.transform = `scale(${this.scale})`;
+      // const mainVideo = document.querySelector('.mainvideo');
+  
+
+        // 휠 스크롤 방향에 따라 축소 비율 조절
+        if (event.deltaY > 0) {
+          this.scale -= 0.05; // 비디오 크기조절
+          this.videoOpacity = 0.6;   //비디오 투명도 조절
+          this.scale = Math.max(this.scale, this.minScale);
+        } else {
+          this.scale += this.scaleFactor;
+          this.scale = Math.min(this.scale, this.maxScale);
+        }
+        // 비디오 컨테이너에 축소 비율 적용
+        // this.sacle = `scale(${this.scale})`;
+        if (this.scale <0.6) {
+          document.body.style.overflow = '';
+          
+        }
       
-      }
-      if (this.scale <0.7) {
-        document.body.style.overflow = '';
-        // console.log(document.body.style)
-      }
     },
 
     replay(event) {
@@ -416,7 +413,7 @@ export default {
     prev() {
       this.moveSlide(this.currentIdx-1);
     },
-
+    //슬라이드1
     moveSlide(num) {
       console.log(this.slideMargin)
       this.slides.style.left = -num*(this.slideWidth+this.slideMargin)+'px';      //버튼 누를시 이동할 거리
@@ -433,6 +430,7 @@ export default {
         },600);
       }
     },
+    //슬라이드 1
     numcount() {
       $('.count-num').each(function() { 
       var $this = $(this),
@@ -453,10 +451,23 @@ export default {
       });  
     });
     },
+
+    //영화 세부페이지 이동
     gomovie(movie_id) {
       // console.log(movie_id)
       this.$router.push({ name: 'MovieDetailView', params: { movie_id: movie.id }})
     },
+
+    //검색기능
+    gosearchmovie() {
+      console.log(this.slideCount)
+      console.log(this.slideWidth1)
+      console.log(this.slideMargin1)
+      console.log(this.newWidth)
+      console.log(this.newSlideCount)
+      console.log(this.currentIdx)
+      this.$router.push({ name: 'SearchView'})
+    }
   },
 }
 
@@ -473,67 +484,161 @@ export default {
   background-color: #343235;
 }
 
+/* 영상 헤더 */
 header {
-  background: rgb(46, 46, 53);
+  /* background: rgb(46, 46, 53); */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
+  
 }
-
-
-
-.maintext {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 75vw;
-  height: 40vh;
-  background: rebeccapurple;
-  overflow: hidden;
-  margin: 2vw;
-  color: white;
-  opacity: 0;
-}
-
-.maintext-text {
-  display: flex;
-  width: 75vw;
-  height: 25vh;
-  background: rgb(75, 69, 69);
-  overflow: hidden;
-  color: white;
-}
-
-.logocol {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 50%;
-}
-
-.numcol {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 50%;
-  font-size: 3vh;
-}
-
-.count-num {
-  text-align: center;
-  font-weight: 700;
-  height: 5vh;
-}
-
 .mainvideo {
-  width: 2000px;
+  align-items: center;
+  width: 1500px;
   /* 비디오 확대축소 애니메이션 */
   transition: transform 0.5s ease;   
   opacity: 1;
+  border: 30px solid black;
+  /* margin: 200px; */
   /* filter: blur(2px); 약간의 흐릿한 효과를 주는 필터 */
+}
+
+/* 텍스트바 */
+.tvtable {
+  width: 1500px;
+  height: 400px;
+  /* background-color: black; */
+}
+.tvtableimg {
+  margin-top: -50px;
+  width: 1300px;
+  height: 200px;
+  /* background-color: black; */
+}
+
+.maintext { 
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  width: 1500px;
+  height: 500px;
+  /* background: rebeccapurple; */
+  overflow: hidden;
+  margin: 2vw;
+  /* color: white; */
+  opacity: 0;
+  font-size: 30px;
+}
+.text-search {
+  font-size: 40px;
+}
+
+
+/* 검색 버튼 */
+/* .button {
+    position: fixed;
+    left:80%; top:50%;
+    width:100px; height:100px;
+    margin:-70px 0 0 -70px;
+    cursor: pointer;
+}
+.compass {
+    position: absolute;
+    width:100%; height:100%;
+    background: #444;
+    border-radius: 0 50% 50% 50%;
+    border: 10px solid white;
+    box-shadow: 0 0 8px rgba(0,0,0,.2);
+    border-right-color: coral;
+    border-bottom-color: coral;
+    transition: border-radius .2s;
+    box-sizing: border-box;
+}
+.button:hover .compass {
+    border-radius: 50%;
+}
+.msg {
+    position: absolute;
+    width:100%; height:100%;
+    line-height: 140px;
+    text-align: center;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+} */
+
+/* 검색2 */
+.input_box {
+  margin-top: 120px;
+}
+.container-4{
+  overflow: hidden;
+  width: 700px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.container-4 input#search{
+  width: 700px;
+  height: 50px;
+  background: #2b303b;
+  border: none;
+  font-size: 10pt;
+  float: left;
+  color: #fff;
+  padding-left: 15px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.container-4 input#search::-webkit-input-placeholder {
+  color: #65737e;
+}
+.container-4 input#search:-moz-placeholder { /* Firefox 18- */
+  color: #65737e;  
+}
+.container-4 input#search::-moz-placeholder {  /* Firefox 19+ */
+  color: #65737e;  
+}
+.container-4 input#search:-ms-input-placeholder {  
+  color: #65737e;  
+}
+
+.container-4 button.icon{
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomright: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: none;
+  background: #232833;
+  height: 50px;
+  width: 50px;
+  color: #4f5b66;
+  opacity: 0;
+  font-size: 10pt;
+  -webkit-transition: all .55s ease;
+  -moz-transition: all .55s ease;
+  -ms-transition: all .55s ease;
+  -o-transition: all .55s ease;
+  transition: all .55s ease;
+}
+.container-4:hover button.icon, .container-4:active button.icon, .container-4:focus button.icon{
+    outline: none;
+    opacity: 1;
+    margin-left: -50px;
+  }
+  .container-4:hover button.icon:hover{
+    background: white;
+  }
+
+
+main {
+  width: 1500px;
 }
 
 .mainbox {
@@ -553,14 +658,14 @@ header {
 /* .mainbox:hover{
   background-color: gray;
 } */
-
+/* 
 .mainimg {
   top: 0;
   left: 0;
   position: absolute;
   width: 100vw;
   opacity: 0.4;
-}
+} */
 
 .custom-1wp6uk4 {
     position: relative;
@@ -646,14 +751,14 @@ header {
   transition: 0.5s ease-out;
 }
 .slides li{
-  width: 780px;
+  width: 900px;
   height: 420px;
   background: #ccc;
   float: left;
   border-radius: 15px;
 }
 .slides li:not(:last-child){
-  margin-right: 18px;
+  margin-right: 15px;
 }
 
 /* 마우스 오버 효과 */

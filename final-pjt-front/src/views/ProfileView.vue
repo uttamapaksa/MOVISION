@@ -1,55 +1,51 @@
 <template>
-<div id="profileview">
+  <div id="profileview">
   
-  <h2>프로필</h2>
+  <h3>Profile</h3>
   <div class="profile-0">
     <div class="profile-1">
       <div class="profile-photo">
         <div class="profile-photo-image">
           <img id="profile-photo-image-url" :src="`${SERVER_URL}${profile.profile_pic}`" alt="profileimg"><br>
         </div>
-        <!-- Button trigger modal -->
-        <button v-if="isYourself" type="button" data-bs-toggle="modal" data-bs-target="#profileimageModal">
-          프로필 사진 변경
-        </button>
-        <!-- Modal -->
-        <div class="modal fade" id="profileimageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="#profileimageModal2" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="profileimageModal2">프로필 사진</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <input type="file" @change="handleImageChange" accept="image/*">
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button @click="saveProfileImage" class="btn btn-primary">Save</button>
-              </div>
+      </div>
+      
+      <!-- Modal -->
+      <div class="modal fade" id="profileimageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="#profileimageModal2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="profileimageModal2">프로필 사진</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <input type="file" @change="handleImageChange" accept="image/*">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button @click="saveProfileImage" class="btn btn-primary">Save</button>
             </div>
           </div>
         </div>
-
       </div>
       <div class="profile-status">
-        <br>
-        <div>아이디 : {{ profile.username }} 
-          <p v-if="!isYourself">
-            <button @click="follow()">
+        <div>아이디 : {{ profile.username }}&nbsp;
+          <span v-if="!isYourself">
+            <button class="profile-btn" @click="follow()">
               <span v-if="isfollow">언팔로우</span>
               <span v-if="!isfollow">팔로우</span>
             </button>
-          </p>
-        </div>
+          </span>
+        </div><br>
         <div>닉네임 : {{ profile.nickname }}</div>
-        <div>가입일 : {{ profile.created_at.slice(0,10)}}</div><br>
+        <div>가입일 : {{ profile.created_at.slice(0,10)}}</div>
+        <div>선호 장르 : {{ totalgenres[profile.like_genre] }}</div><br>
         <div>
           <!-- 팔로잉 모달 버튼 -->
           <span type="button" data-bs-toggle="modal" data-bs-target="#FollowingModal">
             {{ profile.followings.length }} 팔로잉 &nbsp;| &nbsp;
           </span>
-
+          
           <!-- 팔로잉 모달 내용 -->
           <div class="modal" id="FollowingModal" tabindex="-1" aria-labelledby="#FollowingModal2" aria-hidden="true">
             <div class="modal-dialog  modal-dialog-scrollable">
@@ -60,9 +56,9 @@
                 </div>
                 <div @click.prevent="ProfiletoProfile(following.id)" v-for="following in profile.followings" :key="following.id" class="follow-doby modal-body" data-bs-dismiss="modal">
                     아이디 : {{  following.username }}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;닉네임 : {{ following.nickname }}
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
               </div>
             </div>
@@ -90,30 +86,28 @@
           </div>
         </div>
         <br>
-        <button v-if="isYourself">회원정보수정(버튼)</button>
-        <div>
-          <br>
-          <div>Lv : {{ profile.level }}</div>
-          <div>영화 점수 : {{ profile.exp }}</div>
-          <!-- <p>경험치 : {{ profile.exp }}</p> -->
-        </div>
+        <button class="profile-btn" v-if="isYourself">회원정보수정</button><br><br>
+        <!-- Button trigger modal -->
+        <button class="profile-btn" v-if="isYourself" type="button" data-bs-toggle="modal" data-bs-target="#profileimageModal">
+          프로필 사진 변경
+        </button>
       </div>
     </div>
 
     <div class="profile-2 row">
-      <div @click="profileshow=1" class="article-num nums">
+      <div :class="{selected: isSelected(1)}" @click="profileshow=1" class="article-num nums">
         내 글<br>
         {{ profile.reviews.length }} 개
       </div>
-      <div @click="profileshow=2" class="comment-num nums">
+      <div :class="{selected: isSelected(2)}" @click="profileshow=2" class="comment-num nums">
         내 댓글<br>
         {{ profile.reviewcomments.length }} 개
       </div>
-      <div @click="profileshow=3" class="likes-num nums">
+      <div :class="{selected: isSelected(3)}" @click="profileshow=3" class="likes-num nums">
         내가 좋아하는 영화<br>
         {{ profile.like_movies.length }} 개
       </div>
-      <div @click="profileshow=4" class="bookmark-num nums">
+      <div :class="{selected: isSelected(4)}" @click="profileshow=4" class="bookmark-num nums">
         내가 본 영화<br> 
         {{ profile.seen_movies.length }} 개
       </div>
@@ -125,7 +119,7 @@
             제목 : {{ review.title }}<br>
           </div>
           <div class="col-3">
-            작성시간 : {{  review.created_at.slice(2, 10) }}-{{  review.created_at.slice(11, 16)}}
+            {{  review.created_at.slice(2, 10) }}-{{  review.created_at.slice(11, 16)}}
           </div>
         </router-link>
       </div>
@@ -203,6 +197,9 @@ export default {
     review_articles() {
       return this.$store.state.review_articles
     },
+    totalgenres() {
+      return this.$store.getters.totalgenres
+    }
   },
   methods: {
     follow() {
@@ -242,6 +239,13 @@ export default {
       this.$store.dispatch('getProfile', profile_id)
       this.$router.push({name: 'ProfileView', params: {profile_id: profile_id}})
     },
+    isSelected(num) {
+      if (this.profileshow == num) {
+        return true
+      } else {
+        return false
+      }
+    }
   }
 }
 </script>
@@ -255,12 +259,13 @@ export default {
   margin: 0 auto;
   width: 90%;
   height: 90vh;
-  border: solid 1px black;
+  /* border: solid 1px black; */
 }
 .profile-1 {
   display: flex;
   justify-content: space-evenly;
-  margin: 0 auto;
+  align-items: center;
+  margin: auto;
   width: 90%;
   height: 40vh;
   border: solid 1px black;
@@ -271,14 +276,22 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: solid 1px black;
-  height: 40vh;
+  /* border: solid 1px black; */
+  height: 250px;
+  width: 250px;
+}
+
+.profile-status {
+  height: 80%;
 }
 
 .profile-photo-image {
+  margin: auto 0;
   border: solid 1px black;
   width: 250px;
   height: 250px;
+  z-index: 100;
+  border-radius: 50%;
   /* width: fit-content; */
   overflow: hidden;
 }
@@ -312,7 +325,7 @@ export default {
   margin: 0 auto;
   width: 90%;
   height: 45vh;
-  border: solid 1px black;
+  /* border: solid 1px black; */
 }
 
 .profile-3-item {
@@ -321,9 +334,18 @@ export default {
   align-items: center;
   margin: 0 auto;
   width: 100%;
-  height: 10vh;
-  border: solid 1px red;
+  height: 7vh;
+  font-size: 1.8vh;
+  border: solid 1px rgb(205, 205, 205);
 }
 
+.profile-btn{
+  border-radius: 5px;
+  border: solid 2px rgb(74, 171, 255);
+  background-color: white;
+}
 
+.selected {
+  background-color: rgb(227, 242, 255)
+}
 </style>

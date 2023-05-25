@@ -27,8 +27,8 @@ class Movie(models.Model):
     words = models.TextField(null=True)  #추천기능용
 
 class MovieComment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,  related_name="TMDBComment")
-    movie = models.ForeignKey(Movie, related_name="TMDBComment", on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,  related_name="user_movie_comments")
+    movie = models.ForeignKey(Movie, related_name="movie_comments", on_delete=models.CASCADE)
     content =models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

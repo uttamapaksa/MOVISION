@@ -141,7 +141,7 @@ def user_like_movie(request, user_pk):
     movie_words = [data.get('words') for data in movies_serializer.data]
     # 유사 영화 pk 반환
     result = recommend_movies_names(movie_words, idx, movies_serializer, user_pk)
-
+    print(result)
     # 유사 영화들의 데이터 담기
     final_movie = [get_object_or_404(Movie, pk=i) for i in result]
     final_serializer = UserChoiceSimilarMovieSerializer(final_movie, many=True)
@@ -169,30 +169,25 @@ def recommend_movies_names(movie_words, idx, movies, user_pk):
         # print('확인')
         idx_collection.extend(listofMovies)
     # idx_collection.sort(key=lambda x: x[1], reverse=True)[:10]
-    
+
     result_collection=[]
     for movie_idx, one_collection in idx_collection:
-        print('dho?')
         # print(movies.data[movie_idx].get('pk'))
         target_movie = get_object_or_404(Movie, pk=movies.data[movie_idx].get('pk'))
-        print(target_movie.genres.all())
-        print('asdads')
+
         for genre in target_movie.genres.all():
-            print(genre.id)
-            print(user.like_genre)
+
             if user.like_genre == genre.name:
                 one_collection *=1.1
                 break   
-        else:
-            print('0000asdasd')
-        result_collection.append((movie_idx,one_collection))
-        print(result_collection)
-        result_collection.sort(key=lambda x: x[1], reverse=True)[:10]
 
+        result_collection.append((movie_idx,one_collection))
+    result_collection =  sorted(result_collection, key=lambda x: x[1], reverse=True)[:10]
+
+    
         # if user.like_genre in target_movie:
         #     one_collection *= 1.1
     
-
     # 인덱스를 pk로 바꾸기
     pk_collection = []
     for idx in result_collection:

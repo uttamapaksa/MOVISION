@@ -123,6 +123,19 @@ def party_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+@api_view(['POST'])
+def party_comment_create(request, party_pk):  #댓글 생성
+    user = request.user
+    party = get_object_or_404(Review, pk=party_pk)
+    serializer = Party_CommentSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        # serializer.save(review=review, user=user)
+        serializer.save(review=review, user=user)
+        comments = party.reviewcomments.all()    #역참조
+        serializer = Review_CommentSerializer(comments, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
 @api_view(['GET', 'DELETE', 'PUT'])
 def party_detail(request, party_pk):
     # article = Article.objects.get(pk=article_pk)
@@ -130,7 +143,6 @@ def party_detail(request, party_pk):
 
     if request.method == 'GET':
         serializer = PartySerializer(party)
-        print(serializer.data)
         return Response(serializer.data)
     
     elif request.method == 'DELETE':
@@ -144,12 +156,14 @@ def party_detail(request, party_pk):
             return Response(serializer.data)
 
 
+
 @api_view(['GET'])
 def party_comment_list(request):
     if request.method == 'GET':
         party_comments = get_list_or_404(Party_Comment)
         serializer = Party_CommentSerializer(party_comments, many=True)
         return Response(serializer.data)
+
 
 
 @api_view(['GET', 'DELETE', 'PUT'])
@@ -180,3 +194,14 @@ def party_comment_create(request, party_pk):
     if serializer.is_valid(raise_exception=True):
         serializer.save(party=party)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+def party_join(request, party_pk):
+    party = get_object_or_404(Party, pk=party_pk)
+    user = request.user.pk
+    if party.members.filter(pk=user).exists():
+        party.members.remove(user)
+    else:
+        party.members.add(user)
+    return Response('party_join_views.py')

@@ -32,6 +32,11 @@ class MovieSerializer(serializers.ModelSerializer):
             fields = '__all__'
     actors = ActorSerializer(read_only=True, many=True)
     
+    class MovieCommentSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = MovieComment
+            fields = '__all__'
+    Movie_comments = MovieCommentSerializer(read_only=True, many=True)
 
     class Meta:
         model = Movie

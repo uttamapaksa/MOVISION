@@ -1,20 +1,14 @@
 <template>
   <div class="article-list" @click="goreviewdetail">
-    <div class="article-pic">
-    {{article.picture}}
-
-    </div>
     <div class="article-title">
-    작성자 : {{ article.username}} | 
-    제목 : {{ article.title }} | 
-    작성일 :{{article.created_at.slice(0,10)}}
-
-
+    제목 : {{ article.title }}
     </div>
 
-    <div class="article-rate">
-    별점 : 
-
+    <div class="article-user" @click="goprofiledetail(article.user)">
+      {{ article.username}}
+    </div>
+    <div class="article-date">
+      {{article.created_at.slice(0,10)}}
     </div>
     
   </div>
@@ -30,6 +24,10 @@ export default {
   methods: {
     goreviewdetail() {
       this.$router.push({name: 'ReviewDetialView', params:{review_id:this.article.id}})
+    },
+    goprofiledetail(profile_id) {
+      this.$store.dispatch('getProfile', profile_id)
+      this.$router.push({name: 'ProfileView', params: {profile_id: profile_id}})
     }
   }
 }
@@ -41,20 +39,33 @@ export default {
   border: solid 1px green;
   width: 100%;
   margin: 0 auto;
-  height: 50px;
+  height: 10vh;
+  font-size: 2.3vh;
 }
 
-.article-pic {
-  border: solid 1px red;
-  width: 10%;
-}
+
 .article-title {
-  border: solid 1px red;
-  width: 80%;
+  margin: auto 10px;
+  /* border: solid 1px red; */
+  width: 60%;
+  overflow: hidden;
 }
 
-.article-rate {
-  border: solid 1px purple;
-  width: 10%;
+.article-user {
+  margin: auto 0;
+  /* border: solid 1px purple; */
+  width: 20%;
+  overflow: hidden;
+}
+
+.article-user:hover {
+  color: rgb(255, 98, 0);
+}
+
+.article-date {
+  margin: auto 0;
+  /* border: solid 1px purple; */
+  width: 20%;
+  overflow: hidden;
 }
 </style>

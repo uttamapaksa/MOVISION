@@ -1,13 +1,12 @@
 <template>
 <div>
   <div class="poster-line">
-    <div class="poster-header" style="position:absolute; ">
+    <!-- <div class="poster-header" style="position:absolute; ">
       <img :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"  style="opacity: 0.5; z-index: -10; object-fit: cover; width: 100%; height: 100%;" alt="...">
     </div>
     <div class="poster-img" style="z-index: 20;">
       <img :src="`https://image.tmdb.org/t/p/w400${movie.poster_path}`" class="card-img-detail" alt="..." style="z-index: 20;"> 
-    </div>
-
+    </div> -->
     <div class="poster-detail">
       <div class="detail-info container">
         <div class="row h-50">
@@ -40,11 +39,11 @@
               ⭐
               </div>
           </div>
-          <!-- <div class="detailss col-2">언어(보류)</div> -->
+          <div class="detailss col-2">언어(보류)</div>
         </div>
-        <!-- <div  class="ratio ratio-16x9">
+        <div  class="ratio ratio-16x9">
           <iframe :src="videoUrl" frameborder="0"></iframe>
-        </div> -->
+        </div>
       </div>
       
       <div class="detail-overview">
@@ -109,13 +108,9 @@ export default {
     release_year() {
       return this.movie.release_date.slice(0,4)
     },
-    // videoUrl() {
-    //   return `https://www.youtube.com/watch?v=${this.movie.youtube_key}`
-    // }
-    // videoUrl () {
-    //   return `https://www.youtube.com/embed/${this.movie.youtube_key}`
-    // }
-  // },
+    videoUrl () {
+      return `https://www.youtube.com/embed/${this.movie.youtube_key}`
+    },
     movie_comments() {
       const movie_id = this.$route.params.movie_id
       return this.$store.getters.movie_comments.filter(comment => comment.movie == movie_id)

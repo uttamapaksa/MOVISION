@@ -12,7 +12,7 @@
       <input type="password" id="password2" v-model="password2"><br><br>
       
       <label for="nickname">별명 : &nbsp;</label>
-      <input type="text" id="nickname" v-model="nickname"><br><br>
+      <input type="text" id="nickname" v-model.trim="nickname"><br><br>
 
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">{{genre}}</button>
@@ -40,6 +40,14 @@ export default {
   },
   methods: {
     signup() {
+      if (this.idx == 0) {
+        alert('선호 장르를 선택해주세요')
+        return
+      }
+      if (!this.nickname) {
+        alert('별명을 입력해주세요')
+        return
+      }
       // console.log('signup')
       const username = this.username
       const password1 = this.password1
