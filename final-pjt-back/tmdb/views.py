@@ -28,7 +28,6 @@ def movie_detail(request, movie_pk):
     serializer = MovieSerializer(movie)
     return Response(serializer.data)
 
-
 @api_view(['GET','POST'])
 def comment_list(request,movie_pk): #영화 댓글 생성
     user = request.user
@@ -37,15 +36,27 @@ def comment_list(request,movie_pk): #영화 댓글 생성
     if request.method == 'POST':  # 생성
         if serializer.is_valid(raise_exception=True):
             serializer.save(movie=movie,user=user)
-            comments = movie.TMDBComment.all()
+            # comments = movie.TMDBComment.all()
+            comments = movie.movie_comments.all()
             serializer = MovieCommentSerializer(comments,many=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+# @api_view(['GET','POST'])
+# def comment_list(request,movie_pk): #영화 댓글 생성
+#     user = request.user
+#     movie = get_object_or_404(Movie, pk=movie_pk)
+#     serializer = MovieCommentSerializer(data=request.data)
+#     if request.method == 'POST':  # 생성
+#         if serializer.is_valid(raise_exception=True):
+#             serializer.save(movie=movie,user=user)
+#             comments = movie.TMDBComment.all()
+#             serializer = MovieCommentSerializer(comments,many=True)
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-    elif request.method == 'GET':   #조회
-        comments_lst = get_list_or_404(MovieComment)
-        # comments_lst = movie.TMDBComment.all()   #역참조, 해당 영화에 있는 댓글집합
-        serializer = MovieCommentSerializer(comments_lst, many=True)
-        return Response(serializer.data)
+#     elif request.method == 'GET':   #조회
+#         comments_lst = get_list_or_404(MovieComment)
+#         # comments_lst = movie.TMDBComment.all()   #역참조, 해당 영화에 있는 댓글집합
+#         serializer = MovieCommentSerializer(comments_lst, many=True)
+#         return Response(serializer.data)
 
 @api_view(['DELETE', 'PUT'])
 def comment_detail(request, comment_pk):

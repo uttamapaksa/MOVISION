@@ -1,11 +1,11 @@
 <template>
-<div :key="movie.id" class="card snip1 searchcard" @click="godetailmovie" @mouseover="showCardBody2" @mouseout="hideCardBody2">
-  <img :src="`https://image.tmdb.org/t/p/original${movie.poster_path}`" class="card-img-search" alt="...">
+<div :key="movie2.pk" class="card snip1 searchcard" @click="godetailmovie" @mouseover="showCardBody2" @mouseout="hideCardBody2">
+  <img :src="`https://image.tmdb.org/t/p/original${movie2.poster_path}`" class="card-img-search" alt="...">
   <div class="card-body2" :class="{ 'show': showCardBody }" style="position:absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);">
     <div class="card-text">
-      <p class="movie_detail">{{ movie.title }} ({{ movie.release_date.slice(0,4)}})</p>
+      <p class="movie_detail">{{ movie2.title }} </p>
       <button class="movie_d_button">정보 보기</button>
-      <div class="vote-front"><p class="vote-text">평점 : {{ movie.vote_average }}</p></div>
+      <!-- <div class="vote-front"><p class="vote-text">평점 : {{ movie2.vote_average }}</p></div> -->
       <hr>
     </div>
   </div>
@@ -14,9 +14,9 @@
 
 <script>
 export default {
-  name: 'SearchViewItem',
+  name: 'SearchViewItem2',
   props: {
-    movie: Object,
+    movie2: Object,
     totalgenres: Object,
   },
   data() {
@@ -25,13 +25,13 @@ export default {
     };
   },
   computed: {
-    genres() {
-      return this.movie.genres.map(genre => this.totalgenres[genre.id])
-    },
+    // genres() {
+    //   return this.movie2.genre.map(genre => this.totalgenres[genre.id])
+    // },
   },
   methods: {
     godetailmovie() {
-      this.$router.push({ name: 'MovieDetailView', params: { movie_id: this.movie.id }})
+      this.$router.push({ name: 'MovieDetailView', params: { movie_id: this.movie2.pk }})
     },
     checking(){
       console.log('sadf')

@@ -31,6 +31,6 @@ export default {
 
 <style>
 .partyitem {
-  border: solid 2px gray;
+  border: solid 2px black;
 }
 </style>

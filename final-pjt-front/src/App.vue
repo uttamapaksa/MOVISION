@@ -1,15 +1,22 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/">Mainpage</router-link> |
-      <router-link :to="{ name: 'SearchView' }">search</router-link> | 
-      <router-link :to="{ name: 'RecommendView' , params: {user_id: currentuser}}">recommend</router-link> |
-      <router-link :to="{ name: 'CommunityView' }">commu</router-link> |
+      <div>
+        <img class="navtableimg" :src="`${SERVER_URL}/media/movisions.png`" alt="">
+      </div>
+      <div class="fronts">
+        <router-link to="/">Mainpage   &nbsp; &nbsp;&nbsp;</router-link>
+        
+        <router-link :to="{ name: 'SearchView' }"><span>Search </span>   &nbsp; &nbsp;&nbsp;</router-link> 
+        <router-link :to="{ name: 'RecommendView' , params: {user_id: currentuser}}">Recommend  &nbsp; &nbsp; &nbsp;</router-link> 
+        <router-link :to="{ name: 'CommunityView' }">Community  </router-link> 
+      </div>
+      <div>
 
        <!-- 로그인 버튼-->
-      <a v-if="!isLogin" data-bs-toggle="modal" data-bs-target="#staticBackdrop" href="">Login</a>
+      <a class="fronts" v-if="!isLogin" data-bs-toggle="modal" data-bs-target="#staticBackdrop" href="">Login</a>
       <!-- 로그인 -->
-      <div class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal  signup_modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
@@ -37,10 +44,10 @@
       </div>
 
       <!-- 로그아웃 버튼 -->
-      <a v-if="isLogin" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" @click.prevent="logout">Logout</a>
+      <a class="fronts" v-if="isLogin" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" @click.prevent="logout">Logout</a>
       <span v-if="isLogin"> | </span>
       <!-- 로그아웃 -->
-      <div class="modal fade modal-sm" id="staticBackdrop2" tabindex="-1" aria-labelledby="staticBackdropLabel2" data-bs-dismiss="modal" aria-hidden="true">
+      <div class="modal signup_modal fade modal-sm" id="staticBackdrop2" tabindex="-1" aria-labelledby="staticBackdropLabel2" data-bs-dismiss="modal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
@@ -55,6 +62,7 @@
       </div>
 
       <a @click.prevent="apptoProfile">{{currentusername}}</a><span v-if="isLogin">님의 프로필</span>
+      </div>
     </nav>
     <router-view/>
   </div>
@@ -68,6 +76,7 @@ export default {
     return {
       username: null,
       password: null,
+      SERVER_URL: 'http://localhost:8000',
     }
   },
   computed:{
@@ -115,17 +124,36 @@ export default {
 }
 
 nav {
+  display: flex;
   padding: 30px;
+  height: 45px;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Poppins', sans-serif;
+  background-color: rgb(221, 226, 231);
+  font-size: 19px;
+  /* color: aliceblue; */
+}
+.navtableimg {
+  width: 150px;
+}
+.fronts {
+  text-shadow: 1px 1px gray;
 }
 
 nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #636566;
+  text-decoration: none;
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #4675bb;
 }
+
+.signup_modal {
+  color:#2c3e50;
+} 
 
 .modalhidden {
   display: none;

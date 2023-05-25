@@ -1,6 +1,6 @@
 <template>
 <div class="ArticleView">
-      
+      <br><br>
       <div class="community-buttons">
         <button class="commu-btn" :class="{selected: !isParty}" @click="isParty=false">리뷰 게시판</button>
         <button class="commu-btn" :class="{selected: isParty}" @click="isParty=true" >모집 게시판</button>
@@ -9,10 +9,9 @@
   
       <div v-if="!isParty">
         <div class="commu-box">
-          <router-link :to="{ name: 'ReviewCreateView' }"><button class="commu-create-btn">리뷰 작성하기</button></router-link>
+          <router-link :to="{ name: 'ReviewCreateView' }"><button class="commu-create-btn">리뷰 작성하기</button></router-link><br><br>
           <ArticleList v-for="(article, idx) in articles" :key="idx" :article="article"/>
         </div>
-        <br>
         <div class="search-bar">
           <input type="text">
           <input type="submit" value="검색">
@@ -23,11 +22,11 @@
         <div class="commu-box">
           <router-link class="commu-create-btn" :to="{ name: 'PartyCreateView' }"><button class="commu-create-btn">그룹 만들기</button></router-link><br><br>
           <div class="party-site-list">
-            <button class="party-site" :class="{selected: pick1}" @click="site='전체'; picksite(1)">전체</button>
-            <button class="party-site" :class="{selected: pick2}" @click="site='디즈니플러스'; picksite(2)">디즈니플러스</button>
-            <button class="party-site" :class="{selected: pick3}" @click="site='넷플릭스'; picksite(3)">넷플릭스</button>
-            <button class="party-site" :class="{selected: pick4}" @click="site='왓챠'; picksite(4)">왓챠</button>
-            <button class="party-site" :class="{selected: pick5}" @click="site='유튜브'; picksite(5)">유튜브</button>
+            <button class="party-site" :class="{selected: isSelected('전체')}" @click="site='전체'">전체</button>
+            <button class="party-site" :class="{selected: isSelected('디즈니플러스')}" @click="site='디즈니플러스'">디즈니플러스</button>
+            <button class="party-site" :class="{selected: isSelected('넷플릭스')}" @click="site='넷플릭스'">넷플릭스</button>
+            <button class="party-site" :class="{selected: isSelected('왓챠')}" @click="site='왓챠'">왓챠</button>
+            <button class="party-site" :class="{selected: isSelected('유튜브')}" @click="site='유튜브'">유튜브</button>
             <br><br>
             <div class="party-content row">
               <PartyList class="col-5 mx-auto" v-for="(party, idx) in parties" :key="idx" :party="party"/>
@@ -54,11 +53,6 @@ export default {
     return {
       site: '전체',
       isParty: false,
-      pick1: true,
-      pick2: false,
-      pick3: false,
-      pick4: false,
-      pick5: false,
     }
   },
   mounted() {
@@ -78,12 +72,12 @@ export default {
     },
   },
   methods: {
-    picksite(num) {
-      if (num == 1) {this.pick1=true; this.pick2=false; this.pick3=false; this.pick4=false; this.pick5=false
-      } else if (num == 2) {this.pick1=false; this.pick2=true, this.pick3=false, this.pick4=false, this.pick5=false
-      } else if (num == 3) {this.pick1=false, this.pick2=false, this.pick3=true, this.pick4=false, this.pick5=false
-      } else if (num == 4) {this.pick1=false, this.pick2=false, this.pick3=false, this.pick4=true, this.pick5=false
-      } else {this.pick1=false, this.pick2=false, this.pick3=false, this.pick4=false, this.pick5=true}
+    isSelected(text) {
+      if (text == this.site) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }
@@ -99,8 +93,9 @@ export default {
 .commu-btn {
   border: solid 1px gray;
   background-color: white;
-  border-radius: 20px;
-  font-size: 3vw;
+  border-radius: 30px;
+  font-size: 1.5vw;
+  padding: 10px 20px;
 }
 
 .commu-btn:hover {
@@ -116,11 +111,12 @@ export default {
 } */
 
 .commu-create-btn {
+  left: auto;
   border: solid 1px gray;
   background-color: white;
-  border-radius: 2px;
+  border-radius: 15px;
   font-size: 1.5vw;
-  width: 100%;
+  width: 20%;
 }
 
 
@@ -129,7 +125,7 @@ export default {
   margin-right: auto;
   width: 70vw;
   height: 90vh;
-  border: solid 2px black;
+  /* border: solid 2px black; */
 }
 
 .genre-list {
@@ -145,15 +141,16 @@ export default {
 
 .part-site-list {
   display: flex;
+  justify-content: space-around;
 
 }
 .party-site {
   border: solid 1px green;
-  width: 20%;
-  margin: 0 auto;
-  height: 6vh;
-  font-size: 2.3vh;
-  border-radius: 5px;
+  width: 15%;
+  margin: 0 5px;
+  height: 8vh;
+  font-size: 2vh;
+  border-radius: 10px;
   background-color: white
 }
 

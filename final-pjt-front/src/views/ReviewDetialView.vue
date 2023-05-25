@@ -1,24 +1,23 @@
 <template>
-  <div>
-    <h1>Detail</h1>
+  <div id="review-detail-view">
+    <div class="review-detail-title">
+      <h1>{{ review.title }}</h1>
+    </div><br>
+    <h4 class="review-detail-user" @click.prevent="detailtoProfile(review.user)"><br>작성자 : {{ review.username }}</h4>
+    <div class="review-detail-content"><br>
+      <p>내용 : {{ review.content }}</p>
+      <p>작성시간 : {{ review.created_at.slice(0,10) }}</p>
+    </div><br>
 
-    <p @click.prevent="detailtoProfile(review.user)">작성자 : {{ review.username }}</p>
-    <p>작성자번호 : {{ review.user }}</p>
-    <p>글 번호 : {{ review.id }}</p>
-    <p>제목 : {{ review.title }}</p>
-    <p>내용 : {{ review.content }}</p>
-    <p>작성시간 : {{ review.created_at.slice(0,10) }} | 수정시간 : {{ review.updated_at.slice(0,10) }}</p>
     <!-- 댓글 input -->
     <div>
-      댓글을 남겨주세요.
       <input type="text" v-model="review_comment" @keyup.enter="review_save_comment">
-      <button @click="review_save_comment">작성하기</button>
+      <button @click="review_save_comment">댓글 작성하기</button>
     </div>
     <!-- 댓글 리스트 -->
-    <div v-for="comment in comment_lst" :key=comment.id >
-      내용 : {{comment.content}}<br>
-      댓글번호:{{comment.id}} |
-      <a @click.prevent="detailtoProfile(comment.user)">작성자: {{comment.username}}</a> | 
+    <div v-for="comment in comment_lst" :key=comment.id ><br>
+      내용 : {{comment.content}} | 
+      <a class="review-comment-user" @click.prevent="detailtoProfile(comment.user)">작성자: {{comment.username}}</a> | 
       작성시간 : {{comment.created_at.slice(0, 10)}}
       <button v-if="comment.user == currentuser" @click="review_delete_comment(comment.id)">댓글삭제</button>
     </div>
@@ -127,3 +126,34 @@ export default {
   }
 }
 </script>
+
+<style>
+#review-detail-view {
+  border: solid 1px black;
+  height: 900px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.review-detail-user {
+  border: solid 1px black;
+  height: 90px;
+  width: 80%;
+  margin: auto;
+}
+
+.review-detail-user:hover {
+  color: orange;
+}
+
+.review-detail-content {
+  border: solid 1px black;
+  height: 400px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.review-comment-user:hover {
+  color: orange;
+}
+</style>

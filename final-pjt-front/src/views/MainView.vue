@@ -11,53 +11,58 @@
       </section>
       
       <!-- 이미지 -->
-      <div class="tvtable" data-aos="fade-up" data-aos-duration="1500">
+      <div v-if="upimg" class="tvtable" data-aos="fade-up" data-aos-duration="1500">
         <img class="tvtableimg" :src="`${SERVER_URL}/media/table.png`" alt="">
       </div>
+      
       <!-- 텍스트 -->
       <div class="maintext row" data-aos="fade-up" data-aos-duration="1000">
         <div class="maintext-text col-6">
+
           <div class="logocol" data-aos="fade" data-aos-duration="1000" data-aos-delay="200">
-            <img style="height: 70%" src="../assets/logo.png" alt="logo.png">
+            <img class="navtableimg2" :src="`${SERVER_URL}/media/movisions.png`" alt="">
           </div>
         </div>
-        <div class="col-6">
-          <div data-aos="fade" data-aos-duration="1000" data-aos-delay="500">
-            <span class="count-num" data-count="5251">0</span> 개의 영화<br>
+        <div class="img_text col-6">
+          <div class="fads" data-aos="fade" data-aos-duration="1000" data-aos-delay="1500">
+            <span class="count-num" data-count="7251">0</span> 개의 영화<br>
           </div>
-          <div data-aos="fade" data-aos-duration="1000" data-aos-delay="1000">
+          <div class="fads" data-aos="fade" data-aos-duration="1000" data-aos-delay="1800">
+            <span class="count-num" data-count="130">0</span> 개의 OTT 공유그룹
+          </div>
+          <div class="fads" data-aos="fade" data-aos-duration="1000" data-aos-delay="2200">
             <span class="count-num" data-count="125" >0</span> 개의 리뷰<br>
           </div>
-          <div data-aos="fade" data-aos-duration="1000" data-aos-delay="1500">
-            회원수 : <span class="count-num" data-count="3">0</span> 명
+          <div class="fads" data-aos="fade" data-aos-duration="1000" data-aos-delay="2500">
+            회원수 : <span class="count-num" data-count="42">0</span> 명
           </div>
         </div>
       </div>
       <!-- 텍스트 검색 -->
-      <div >
+      <div class="maintext2">
         <div class='text-search'>
           <div>
-            <p data-count="48251" data-aos="fade-up" data-aos-duration="1000">
+            <p class='text3' data-count="48251" data-aos="fade-up" data-aos-duration="2200">
               영화 이름이 기억나지 않을때, 
             </p><br>
-            <p data-count="48251" data-aos="fade-up" data-aos-duration="1000">
+            <p class='text3' data-count="48251" data-aos="fade-up" data-aos-duration="2500">
               볼 영화가 없을때,
             </p><br>
           </div>
           <div>
-            <p data-count="48251" data-aos="fade-up" data-aos-duration="1000">
+            <p class='text3' data-count="48251" data-aos="fade-up" data-aos-duration="2800">
               좋아하는 장르와 영화를 기반으로 영화를 추천받고 싶다면,
               </p>
+          </div><br>
+          <div class="input_box" data-aos="fade-up" data-aos-duration="2800">
+            <div class="container-4">
+              <input type="search" id="search" placeholder="Search..." />
+              <button @click="gosearchmovie" class="icon"><i class="fa fa-search">검색</i></button>
+            </div>
           </div>
         </div>
       </div>
     </header>
-    <div class="input_box" data-aos="fade-up" data-aos-duration="1000">
-      <div class="container-4">
-        <input type="search" id="search" placeholder="Search..." />
-        <button @click="gosearchmovie" class="icon"><i class="fa fa-search">검색</i></button>
-      </div>
-    </div>
     <!-- 검색버튼 -->
     <!-- <div class="button">
       <div class="compass"></div>
@@ -120,18 +125,7 @@
         </ul>
       </div>
 
-      <div class="mainbox"  data-aos="fade-up" data-aos-duration="1000">
-        <br><br><br><br><br><br>
 
-      </div>
-      
-      <div class="searchbox" data-aos="fade-up" data-aos-duration="1000">
-        <div class="searchinput"></div>
-        <router-link :to="{name: 'SearchView'}">
-          <div class="searchsubmit">
-          </div>
-        </router-link>
-      </div>
 
 <!-- 
       <div class="mainbox search" data-aos="fade-up" data-aos-duration="1000">
@@ -148,8 +142,7 @@
     </main>
 
     <footer>
-      <h3>footer</h3>
-      <br>
+      <div class="endbox" data-aos="fade-up" data-aos-duration="1000"></div>
     </footer>
   </div>
 </template>
@@ -185,15 +178,16 @@ export default {
       newWidth: 1500,   // 슬라이드1의 전체 길이
       newSlideCount: 0,    // 슬라이드1 갯수
       currentIdx :0,  //현재 슬라이드1의 위치
+      upimg : false,
     }
   },
   mounted() {
-    console.log(this.$store.state.movies)
-    if (!this.$store.state.movies) {
+    console.log(this.$store.getters.movies)
+    if (!this.$store.getters.movies) {
       this.$store.dispatch('fetchMovies');
     } else {
       this.$store.dispatch('fetchMovies');
-      console.log(this.$store.state.movies)
+      console.log(this.$store.getters.movies)
     }
 
     //휠스크롤 영상 축소
@@ -364,13 +358,13 @@ export default {
   }, 
   computed: {
     top10_movies() {
-      return this.$store.state.top10_movies
+      return this.$store.getters.top10_movies
     },
     recent30_movies() {
-      return this.$store.state.recent30_movies
+      return this.$store.getters.recent30_movies
     },
     new10_movies() {
-      return this.$store.state.new10_movies
+      return this.$store.getters.new10_movies
     },
     currentuser() {
       return this.$store.getters.currentuser
@@ -382,7 +376,6 @@ export default {
     handleWheelScroll(event) {
       // const mainVideo = document.querySelector('.mainvideo');
   
-
         // 휠 스크롤 방향에 따라 축소 비율 조절
         if (event.deltaY > 0) {
           this.scale -= 0.05; // 비디오 크기조절
@@ -394,7 +387,12 @@ export default {
         }
         // 비디오 컨테이너에 축소 비율 적용
         // this.sacle = `scale(${this.scale})`;
+        if (this.scale <0.8) {
+          this.upimg = true 
+
+        }
         if (this.scale <0.6) {
+
           document.body.style.overflow = '';
           
         }
@@ -494,7 +492,7 @@ header {
 }
 .mainvideo {
   align-items: center;
-  width: 1500px;
+  width: 2000px;
   /* 비디오 확대축소 애니메이션 */
   transition: transform 0.5s ease;   
   opacity: 1;
@@ -505,12 +503,13 @@ header {
 
 /* 텍스트바 */
 .tvtable {
+  margin: 0px auto;
   width: 1500px;
   height: 400px;
   /* background-color: black; */
 }
 .tvtableimg {
-  margin-top: -50px;
+  margin-top: -100px;
   width: 1300px;
   height: 200px;
   /* background-color: black; */
@@ -521,20 +520,40 @@ header {
   /* flex-direction: column; */
   /* justify-content: center; */
   /* align-items: center; */
-  width: 1500px;
-  height: 500px;
+  width: 2000px;
+  height: 700px;
   /* background: rebeccapurple; */
   overflow: hidden;
-  margin: 2vw;
+  margin-top:20vh;
   /* color: white; */
   opacity: 0;
   font-size: 30px;
+  background-color: #3f3d40;
+}
+.maintext {
+  width: 2000px;
 }
 .text-search {
   font-size: 40px;
+  background-color: #3f3d40;
 }
-
-
+.img_text {
+  /* display: ; */
+  margin: auto;
+}
+.fads {
+  color: #130a0a;
+}
+.count-num {
+  color: #762626;
+  font-size: 50px;
+}
+.logocol {
+  display: flex;
+  align-items: center;
+  margin-top: 200px;
+  margin-left: 150px;
+}
 /* 검색 버튼 */
 /* .button {
     position: fixed;
@@ -571,13 +590,21 @@ header {
 
 /* 검색2 */
 .input_box {
-  margin-top: 120px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+.icon {
+
+  border: 20px solid green;
+
 }
 .container-4{
   overflow: hidden;
   width: 700px;
   vertical-align: middle;
   white-space: nowrap;
+  /* border: 5px solid black */
 }
 
 .container-4 input#search{
@@ -686,10 +713,17 @@ main {
 .custom-1yltisf {
   text-align: center;
 }
-
+.endbox {
+  background-color: #ffb10a;
+  width: 100vw;
+  height: 200px;
+}
+.text3 {
+  color: rgb(225, 222, 222);
+}
 .custom-1cqzdpo {
     display: inline-block;
-    background-color: #ffb10a;
+    background-color: #917c4e;
     color: #FFFFFF;
     /* font-size: 15px; */
     /* font-weight: 700; */

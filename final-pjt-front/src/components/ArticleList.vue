@@ -39,7 +39,7 @@ export default {
   border: solid 1px green;
   width: 100%;
   margin: 0 auto;
-  height: 10vh;
+  height: 8vh;
   font-size: 2.3vh;
 }
 
